@@ -22,29 +22,17 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    
-    .product-card {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .product-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
     .product-card:active { transform: scale(0.97); }
-    
-    .product-img {
-      transition: transform 0.45s ease;
-    }
-    .product-card:hover .product-img {
-      transform: scale(1.07);
-    }
-
+    .product-img { transition: transform 0.45s ease; }
+    .product-card:hover .product-img { transform: scale(1.07); }
     @keyframes pop {
       0% { transform: scale(0.5); opacity: 0; }
       70% { transform: scale(1.12); }
       100% { transform: scale(1); opacity: 1; }
     }
     .qty-badge { animation: pop 0.22s ease-out; }
-
-    #bottom-cart-bar {
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+    #bottom-cart-bar { transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
   </style>
 </head>
 <body class="h-full flex flex-col overflow-x-hidden select-none bg-slate-950 text-slate-100 font-sans antialiased">
@@ -52,9 +40,7 @@
   <!-- Header -->
   <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-500/30">
-        ⚡
-      </div>
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-500/30">⚡</div>
       <div>
         <h1 class="text-base font-bold leading-tight flex items-center gap-1.5">
           FastDelivery
@@ -66,7 +52,6 @@
         </p>
       </div>
     </div>
-
     <button onclick="openCartModal()" class="relative p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/50 hover:bg-slate-800 text-orange-400 transition-all active:scale-95">
       <i data-lucide="shopping-bag" class="w-5 h-5"></i>
       <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 scale-0 transition-transform duration-200">0</span>
@@ -213,81 +198,81 @@
   </div>
 
   <script>
-    // ================== DATA ==================
     const CATEGORIES = [
       { id: "all", name: "Barchasi", icon: "🍽️" },
       { id: "burgers", name: "Burgerlar", icon: "🍔" },
       { id: "pizza", name: "Pitsa", icon: "🍕" },
       { id: "chicken", name: "Tovuq", icon: "🍗" },
       { id: "sides", name: "Qo‘shimcha", icon: "🍟" },
-      { id: "drinks", name: "Ichimliklar", icon: "🥤" }
+      { id: "drinks", name: "Ichimliklar", icon: "🥤" },
+      { id: "desserts", name: "Shirinliklar", icon: "🍰" }
     ];
 
-    // Real high-quality Unsplash images
+    // 52 ta mahsulot — real rasmlar bilan
     const PRODUCTS = [
-      // Burgers
-      { id: 1, category: "burgers", title: "Double Black Cheeseburger", price: 7.50, 
-        img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=85",
-        desc: "Ikkita suvli kotlet + cheddar" },
-      { id: 2, category: "burgers", title: "Classic Beef Burger", price: 5.50, 
-        img: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=85",
-        desc: "Klassik mol go‘shti + sabzavotlar" },
-      { id: 3, category: "burgers", title: "Bacon Smash Burger", price: 8.20, 
-        img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=85",
-        desc: "Bekon + erigan pishloq + sous" },
-      { id: 4, category: "burgers", title: "Chicken Deluxe Burger", price: 6.80, 
-        img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=600&q=85",
-        desc: "Qarsillama tovuq kotleti" },
+      // ===== BURGERS (12) =====
+      { id: 1, category: "burgers", title: "Double Black Cheeseburger", price: 7.50, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=85", desc: "Ikkita suvli kotlet + cheddar" },
+      { id: 2, category: "burgers", title: "Classic Beef Burger", price: 5.50, img: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=85", desc: "Klassik mol go‘shti + sabzavotlar" },
+      { id: 3, category: "burgers", title: "Bacon Smash Burger", price: 8.20, img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=85", desc: "Bekon + erigan pishloq" },
+      { id: 4, category: "burgers", title: "Chicken Deluxe Burger", price: 6.80, img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=600&q=85", desc: "Qarsillama tovuq kotleti" },
+      { id: 5, category: "burgers", title: "Mushroom Swiss Burger", price: 7.90, img: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=85", desc: "Qo‘ziqorin + Swiss pishloq" },
+      { id: 6, category: "burgers", title: "BBQ Bacon Burger", price: 8.50, img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=85", desc: "BBQ sous + bekon" },
+      { id: 7, category: "burgers", title: "Spicy Jalapeño Burger", price: 7.20, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=85", desc: "Jalapeño + achchiq sous" },
+      { id: 8, category: "burgers", title: "Double Cheese Burger", price: 6.90, img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=600&q=85", desc: "Ikkita pishloq qatlami" },
+      { id: 9, category: "burgers", title: "Veggie Burger", price: 5.80, img: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=600&q=85", desc: "Sabzavotli burger" },
+      { id: 10, category: "burgers", title: "Fish Burger", price: 6.50, img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=600&q=85", desc: "Baliq kotleti + tartar" },
+      { id: 11, category: "burgers", title: "Truffle Burger", price: 9.90, img: "https://images.unsplash.com/photo-1607013251379-e6eecfffe234?auto=format&fit=crop&w=600&q=85", desc: "Truffle sous + premium" },
+      { id: 12, category: "burgers", title: "Kids Mini Burger", price: 3.90, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=85", desc: "Bolalar uchun kichik" },
 
-      // Pizza
-      { id: 5, category: "pizza", title: "Pepperoni Supreme", price: 11.90, 
-        img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=85",
-        desc: "Pepperoni + cho‘ziluvchan mozzarella" },
-      { id: 6, category: "pizza", title: "Four Cheese Special", price: 10.50, 
-        img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=85",
-        desc: "4 xil premium pishloq" },
-      { id: 7, category: "pizza", title: "Margherita Classic", price: 9.20, 
-        img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=85",
-        desc: "Pomidor + mozzarella + reyhan" },
-      { id: 8, category: "pizza", title: "Meat Lovers", price: 13.50, 
-        img: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=85",
-        desc: "Pepperoni, kolbasa, bekon" },
+      // ===== PIZZA (10) =====
+      { id: 13, category: "pizza", title: "Pepperoni Supreme", price: 11.90, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=85", desc: "Pepperoni + mozzarella" },
+      { id: 14, category: "pizza", title: "Four Cheese Special", price: 10.50, img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=85", desc: "4 xil premium pishloq" },
+      { id: 15, category: "pizza", title: "Margherita Classic", price: 9.20, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=85", desc: "Pomidor + mozzarella + reyhan" },
+      { id: 16, category: "pizza", title: "Meat Lovers", price: 13.50, img: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=85", desc: "Pepperoni, kolbasa, bekon" },
+      { id: 17, category: "pizza", title: "Hawaiian Pizza", price: 11.20, img: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=600&q=85", desc: "Ananas + vetchina" },
+      { id: 18, category: "pizza", title: "BBQ Chicken Pizza", price: 12.40, img: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=600&q=85", desc: "BBQ tovuq + piyoz" },
+      { id: 19, category: "pizza", title: "Vegetarian Pizza", price: 10.80, img: "https://images.unsplash.com/photo-1571407970349-435570bb70d8?auto=format&fit=crop&w=600&q=85", desc: "Sabzavotlar bilan" },
+      { id: 20, category: "pizza", title: "Spicy Diavola", price: 12.00, img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=85", desc: "Achchiq kolbasa + chili" },
+      { id: 21, category: "pizza", title: "Seafood Pizza", price: 14.20, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=85", desc: "Dengiz mahsulotlari" },
+      { id: 22, category: "pizza", title: "White Sauce Pizza", price: 11.50, img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=85", desc: "Oq sous + pishloq" },
 
-      // Chicken
-      { id: 9, category: "chicken", title: "Crispy Wings (8 dona)", price: 8.00, 
-        img: "https://images.unsplash.com/photo-1527477396000-e27173b5ebb8?auto=format&fit=crop&w=600&q=85",
-        desc: "Qarsillama achchiq qanotchalar" },
-      { id: 10, category: "chicken", title: "Nuggets & Fries", price: 6.00, 
-        img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=85",
-        desc: "Nuggets + kartoshka fri" },
-      { id: 11, category: "chicken", title: "Spicy Chicken Strips", price: 7.40, 
-        img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=85",
-        desc: "Achchiq tovuq tasma" },
+      // ===== CHICKEN (8) =====
+      { id: 23, category: "chicken", title: "Crispy Wings (8 dona)", price: 8.00, img: "https://images.unsplash.com/photo-1527477396000-e27173b5ebb8?auto=format&fit=crop&w=600&q=85", desc: "Qarsillama achchiq qanotchalar" },
+      { id: 24, category: "chicken", title: "Nuggets & Fries", price: 6.00, img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=85", desc: "Nuggets + kartoshka fri" },
+      { id: 25, category: "chicken", title: "Spicy Chicken Strips", price: 7.40, img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=85", desc: "Achchiq tovuq tasma" },
+      { id: 26, category: "chicken", title: "Fried Chicken Bucket", price: 14.90, img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=600&q=85", desc: "8 bo‘lak qovurilgan tovuq" },
+      { id: 27, category: "chicken", title: "Honey Garlic Wings", price: 8.80, img: "https://images.unsplash.com/photo-1567620832904-9fe5cf23db48?auto=format&fit=crop&w=600&q=85", desc: "Asal-sarimsoq sous" },
+      { id: 28, category: "chicken", title: "Chicken Tenders", price: 7.00, img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=85", desc: "Yumshoq tovuq tenderlar" },
+      { id: 29, category: "chicken", title: "BBQ Wings (10 dona)", price: 9.50, img: "https://images.unsplash.com/photo-1527477396000-e27173b5ebb8?auto=format&fit=crop&w=600&q=85", desc: "BBQ sousli qanotchalar" },
+      { id: 30, category: "chicken", title: "Popcorn Chicken", price: 5.90, img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=85", desc: "Kichik qovurilgan tovuq" },
 
-      // Sides
-      { id: 12, category: "sides", title: "French Fries Large", price: 3.50, 
-        img: "https://images.unsplash.com/photo-1576107233121-bab6f8a4e87e?auto=format&fit=crop&w=600&q=85",
-        desc: "Katta porsiya kartoshka fri" },
-      { id: 13, category: "sides", title: "Onion Rings", price: 4.20, 
-        img: "https://images.unsplash.com/photo-1639024471283-035667835c40?auto=format&fit=crop&w=600&q=85",
-        desc: "Qarsillama piyoz xalqalari" },
-      { id: 14, category: "sides", title: "Cheese Fries", price: 4.80, 
-        img: "https://images.unsplash.com/photo-1585109649139-3668086b0d1a?auto=format&fit=crop&w=600&q=85",
-        desc: "Pishloqli kartoshka fri" },
+      // ===== SIDES (8) =====
+      { id: 31, category: "sides", title: "French Fries Large", price: 3.50, img: "https://images.unsplash.com/photo-1576107233121-bab6f8a4e87e?auto=format&fit=crop&w=600&q=85", desc: "Katta porsiya fri" },
+      { id: 32, category: "sides", title: "Onion Rings", price: 4.20, img: "https://images.unsplash.com/photo-1639024471283-035667835c40?auto=format&fit=crop&w=600&q=85", desc: "Qarsillama piyoz xalqalari" },
+      { id: 33, category: "sides", title: "Cheese Fries", price: 4.80, img: "https://images.unsplash.com/photo-1585109649139-3668086b0d1a?auto=format&fit=crop&w=600&q=85", desc: "Pishloqli kartoshka fri" },
+      { id: 34, category: "sides", title: "Loaded Potato Wedges", price: 5.20, img: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?auto=format&fit=crop&w=600&q=85", desc: "Pishloq + bekon bilan" },
+      { id: 35, category: "sides", title: "Mozzarella Sticks", price: 4.90, img: "https://images.unsplash.com/photo-1531749668029-2db88e4276c7?auto=format&fit=crop&w=600&q=85", desc: "Erigan mozzarella tayoqchalar" },
+      { id: 36, category: "sides", title: "Coleslaw", price: 2.80, img: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=600&q=85", desc: "Yangilangan karam salati" },
+      { id: 37, category: "sides", title: "Garlic Bread", price: 3.20, img: "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?auto=format&fit=crop&w=600&q=85", desc: "Sarimsoqli non" },
+      { id: 38, category: "sides", title: "Sweet Potato Fries", price: 4.50, img: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=600&q=85", desc: "Shirin kartoshka fri" },
 
-      // Drinks
-      { id: 15, category: "drinks", title: "Coca-Cola 0.5L", price: 1.50, 
-        img: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=600&q=85",
-        desc: "Muzdek klassik Coca-Cola" },
-      { id: 16, category: "drinks", title: "Fresh Orange Juice", price: 3.00, 
-        img: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=600&q=85",
-        desc: "Tabiiy yangi siqilgan" },
-      { id: 17, category: "drinks", title: "Iced Latte", price: 3.80, 
-        img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=85",
-        desc: "Muzli latte (Starbucks uslubi)" },
-      { id: 18, category: "drinks", title: "Milkshake Chocolate", price: 4.50, 
-        img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=85",
-        desc: "Shokoladli milkshake" }
+      // ===== DRINKS (8) =====
+      { id: 39, category: "drinks", title: "Coca-Cola 0.5L", price: 1.50, img: "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=600&q=85", desc: "Klassik qizil Coca-Cola" },
+      { id: 40, category: "drinks", title: "Coca-Cola Zero 0.5L", price: 1.50, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=85", desc: "Shakarsiz Coca-Cola Zero" },
+      { id: 41, category: "drinks", title: "Fresh Orange Juice", price: 3.00, img: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=600&q=85", desc: "Tabiiy yangi siqilgan" },
+      { id: 42, category: "drinks", title: "Iced Latte", price: 3.80, img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=85", desc: "Muzli latte" },
+      { id: 43, category: "drinks", title: "Milkshake Chocolate", price: 4.50, img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=85", desc: "Shokoladli milkshake" },
+      { id: 44, category: "drinks", title: "Strawberry Milkshake", price: 4.50, img: "https://images.unsplash.com/photo-1579954115545-a46596d5de8e?auto=format&fit=crop&w=600&q=85", desc: "Qulupnayli milkshake" },
+      { id: 45, category: "drinks", title: "Lemonade Fresh", price: 2.80, img: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=600&q=85", desc: "Yangi limonad" },
+      { id: 46, category: "drinks", title: "Iced Tea Peach", price: 2.50, img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=85", desc: "Shaftoli muzli choy" },
+
+      // ===== DESSERTS (6) =====
+      { id: 47, category: "desserts", title: "Chocolate Brownie", price: 3.90, img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=85", desc: "Issiq shokoladli brownie" },
+      { id: 48, category: "desserts", title: "Cheesecake Slice", price: 4.80, img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=85", desc: "Klassik cheesecake" },
+      { id: 49, category: "desserts", title: "Ice Cream Sundae", price: 4.20, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cd?auto=format&fit=crop&w=600&q=85", desc: "Muzqaymoq + sous" },
+      { id: 50, category: "desserts", title: "Donut Glazed", price: 2.50, img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=85", desc: "Shakarli donut" },
+      { id: 51, category: "desserts", title: "Apple Pie", price: 3.70, img: "https://images.unsplash.com/photo-1535920527002-b35e96722eb9?auto=format&fit=crop&w=600&q=85", desc: "Issiq olma pirogi" },
+      { id: 52, category: "desserts", title: "Chocolate Cookie", price: 2.20, img: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=85", desc: "Yumshoq shokoladli pechene" }
     ];
 
     let cart = JSON.parse(localStorage.getItem('fd_cart') || '{}');
@@ -372,7 +357,8 @@
         return `
           <div class="product-card bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col hover:border-slate-700 transition-all">
             <div class="relative h-40 overflow-hidden">
-              <img src="${prod.img}" alt="${prod.title}" class="product-img w-full h-full object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'">
+              <img src="${prod.img}" alt="${prod.title}" class="product-img w-full h-full object-cover" loading="lazy" 
+                   onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent"></div>
             </div>
             <div class="p-3 flex flex-col flex-1">
@@ -477,7 +463,8 @@
         subtotal += line;
         return `
           <div class="flex items-center gap-3 py-1.5">
-            <img src="${prod.img}" class="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-700/50" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80'">
+            <img src="${prod.img}" class="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-700/50" 
+                 onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80'">
             <div class="flex-1 min-w-0">
               <h4 class="text-sm font-semibold text-slate-100 truncate">${prod.title}</h4>
               <p class="text-xs text-slate-500">${formatPrice(prod.price)} × ${qty}</p>
