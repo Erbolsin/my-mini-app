@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Telegram Mini App - Fast Food & Online Shop</title>
-  
+
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -23,655 +23,239 @@
               600: '#0369a1',
               700: '#075985',
               accent: '#38bdf8'
-            },
-            tgBg: 'var(--tg-theme-bg-color, #0f172a)',
-            tgText: 'var(--tg-theme-text-color, #f8fafc)',
-            tgHint: 'var(--tg-theme-hint-color, #94a3b8)',
-            tgButton: 'var(--tg-theme-button-color, #0284c7)',
-            tgButtonText: 'var(--tg-theme-button-text-color, #ffffff)',
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            }
           }
         }
       }
-    }
+    };
   </script>
-  
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    /* Custom Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(56, 189, 248, 0.3);
-      border-radius: 4px;
-    }
-    
-    /* Animation classes */
-    .slide-up {
-      animation: slideUp 0.25s ease-out forwards;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    
-    .fade-in {
-      animation: fadeIn 0.2s ease-in forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
 
-    /* Elastic tap feedback */
-    .active-scale:active {
-      transform: scale(0.96);
-    }
-  </style>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="h-full flex flex-col justify-between overflow-x-hidden select-none bg-slate-950 text-slate-100 font-sans antialiased">
 
-  <!-- Top App Bar / Header -->
-  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 transition-colors">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
-          <i class="fa-solid fa-burger text-lg"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-base tracking-tight leading-tight text-slate-100" id="store-title">Express Eats</h1>
-          <p class="text-xs text-sky-400 font-medium" id="user-greeting">Welcome 👋</p>
-        </div>
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between shadow-sm">
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 font-bold text-lg">
+        🍔
       </div>
-      
-      <!-- Cart Indicator Button -->
-      <button id="header-cart-btn" onclick="openCartModal()" class="relative p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 text-slate-200 transition active-scale">
-        <i class="fa-solid fa-cart-shopping text-base"></i>
-        <span id="cart-badge" class="hidden absolute -top-1.5 -right-1.5 bg-sky-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-slate-950 animate-pulse">
-          0
-        </span>
-      </button>
+      <div>
+        <h1 class="text-base font-bold leading-tight">Fast Shop</h1>
+        <p class="text-xs text-slate-400">Tez va mazali yetkazib berish</p>
+      </div>
     </div>
-
-    <!-- Search Input & Filters -->
-    <div class="max-w-md mx-auto mt-3 space-y-2.5">
-      <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-        <input 
-          type="text" 
-          id="search-input"
-          oninput="handleSearch()"
-          placeholder="Search burgers, drinks, sides..." 
-          class="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500/60 focus:ring-1 focus:ring-sky-500/60 transition"
-        />
-      </div>
-
-      <!-- Categories Scroll Tab -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="category-tabs">
-        <!-- Rendered via JS -->
-      </div>
+    <div id="cart-badge" class="hidden">
+      <button onclick="openCartModal()" class="relative p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 transition-colors">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span id="cart-count" class="absolute -top-1 -right-1 bg-sky-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
+      </button>
     </div>
   </header>
 
-  <!-- Main Catalog Content -->
-  <main class="flex-1 max-w-md mx-auto w-full px-4 py-4 pb-28">
-    <!-- Active Category Title & Count -->
-    <div class="flex items-center justify-between mb-3">
-      <h2 id="category-heading" class="font-bold text-sm tracking-wide text-slate-300 uppercase">All Products</h2>
-      <span id="product-count" class="text-xs text-slate-500">0 items</span>
-    </div>
-
-    <!-- Products Grid -->
-    <div id="product-grid" class="grid grid-cols-2 gap-3.5">
-      <!-- Dynamic Product Cards Injected Here -->
-    </div>
-
-    <!-- Empty Search State -->
-    <div id="empty-state" class="hidden text-center py-12 px-4">
-      <div class="w-16 h-16 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-500">
-        <i class="fa-solid fa-utensils text-xl"></i>
-      </div>
-      <h3 class="font-semibold text-slate-300 text-sm">No items found</h3>
-      <p class="text-xs text-slate-500 mt-1">Try searching for something else or change categories.</p>
+  <!-- Main Product Grid -->
+  <main class="flex-1 max-w-2xl w-full mx-auto p-4 pb-24">
+    <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Mahsulotlar</h2>
+    <div id="products-grid" class="grid grid-cols-2 gap-3">
+      <!-- Products dynamically inserted here -->
     </div>
   </main>
 
-  <!-- Floating Cart / Checkout Bottom Bar -->
-  <div id="floating-bar" class="fixed bottom-0 left-0 right-0 z-20 px-4 py-3 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent pointer-events-none">
-    <div class="max-w-md mx-auto pointer-events-auto">
-      <button 
-        id="view-cart-btn"
-        onclick="openCartModal()"
-        class="hidden w-full bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg shadow-sky-500/25 flex items-center justify-between transition-all active-scale"
-      >
-        <div class="flex items-center gap-2.5">
-          <span id="floating-cart-count" class="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-lg">
-            0 items
-          </span>
-          <span class="text-sm font-medium">View Order</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span id="floating-cart-total" class="font-bold text-base">$0.00</span>
-          <i class="fa-solid fa-arrow-right text-xs"></i>
-        </div>
+  <!-- Bottom Cart Bar -->
+  <div id="bottom-cart-bar" class="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/90 backdrop-blur-lg border-t border-slate-800 transform translate-y-full transition-transform duration-300 z-40">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
+      <div>
+        <p class="text-xs text-slate-400">Jami summa:</p>
+        <p id="bottom-cart-total" class="text-lg font-bold text-sky-400">$0.00</p>
+      </div>
+      <button onclick="openCartModal()" class="flex-1 bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center space-x-2 transition-all">
+        <span>Savatni ko'rish</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </button>
     </div>
   </div>
 
-  <!-- Cart Slide-Up Drawer / Modal -->
-  <div id="cart-modal" class="fixed inset-0 z-40 hidden">
-    <!-- Backdrop -->
-    <div onclick="closeCartModal()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm fade-in"></div>
-
-    <!-- Drawer Panel -->
-    <div class="absolute bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 rounded-t-3xl max-h-[85vh] flex flex-col max-w-md mx-auto slide-up shadow-2xl">
-      <!-- Handle bar -->
-      <div class="w-12 h-1 bg-slate-700 rounded-full mx-auto my-2.5 opacity-60"></div>
-
-      <!-- Header -->
-      <div class="px-5 py-2 border-b border-slate-800 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-basket-shopping text-sky-400"></i>
-          <h3 class="font-bold text-base text-slate-100">Your Order</h3>
-        </div>
-        <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-200">
-          <i class="fa-solid fa-xmark text-sm"></i>
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-2xl max-w-lg w-full mx-auto max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <i data-lucide="shopping-cart" class="w-5 h-5 text-sky-400"></i>
+          Sizning savatingiz
+        </h3>
+        <button onclick="closeCartModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-
-      <!-- Cart Items List -->
-      <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3.5 divide-y divide-slate-800/60">
-        <!-- Rendered via JS -->
+      
+      <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3 divide-y divide-slate-800/50">
+        <!-- Cart items inserted here -->
       </div>
 
-      <!-- Footer / Summary -->
-      <div class="p-5 border-t border-slate-800 bg-slate-900/90 space-y-3">
-        <div class="space-y-1.5 text-xs">
-          <div class="flex justify-between text-slate-400">
-            <span>Subtotal</span>
-            <span id="cart-subtotal" class="font-semibold text-slate-200">$0.00</span>
-          </div>
-          <div class="flex justify-between text-slate-400">
-            <span>Delivery Fee</span>
-            <span class="font-semibold text-emerald-400">Free</span>
-          </div>
-          <div class="flex justify-between text-sm font-bold text-slate-100 pt-2 border-t border-slate-800">
-            <span>Total Amount</span>
-            <span id="cart-total" class="text-sky-400">$0.00</span>
-          </div>
+      <div class="p-4 border-t border-slate-800 bg-slate-900/50 space-y-3">
+        <div class="flex justify-between items-center text-sm">
+          <span class="text-slate-400">Jami:</span>
+          <span id="modal-cart-total" class="text-lg font-bold text-sky-400">$0.00</span>
         </div>
-
-        <button 
-          id="cart-checkout-btn"
-          onclick="openCheckoutModal()"
-          class="w-full bg-sky-500 hover:bg-sky-400 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 transition active-scale"
-        >
-          <span>Proceed to Checkout</span>
-          <i class="fa-solid fa-chevron-right text-xs"></i>
+        <button onclick="openCheckoutModal()" class="w-full bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-lg shadow-sky-500/20 transition-all">
+          Buyurtmani rasmiylashtirish
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Checkout Details Modal -->
-  <div id="checkout-modal" class="fixed inset-0 z-50 hidden">
-    <!-- Backdrop -->
-    <div onclick="closeCheckoutModal()" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm fade-in"></div>
-
-    <!-- Modal Box -->
-    <div class="absolute bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 rounded-t-3xl max-h-[90vh] flex flex-col max-w-md mx-auto slide-up overflow-hidden shadow-2xl">
-      <!-- Header -->
-      <div class="px-5 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
-        <h3 class="font-bold text-base text-slate-100">Delivery Details</h3>
-        <button onclick="closeCheckoutModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400">
-          <i class="fa-solid fa-xmark text-sm"></i>
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-2xl max-w-lg w-full mx-auto max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <i data-lucide="clipboard-check" class="w-5 h-5 text-sky-400"></i>
+          Ma'lumotlarni kiriting
+        </h3>
+        <button onclick="closeCheckoutModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Form Fields -->
-      <form id="checkout-form" onsubmit="submitOrder(event)" class="flex-1 overflow-y-auto p-5 space-y-4">
-        <!-- Delivery Address -->
+      <form id="checkout-form" onsubmit="submitOrder(event)" class="p-4 overflow-y-auto space-y-4 text-sm">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Delivery Address *</label>
-          <div class="relative">
-            <i class="fa-solid fa-location-dot absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-            <textarea 
-              id="delivery-address" 
-              required 
-              rows="2" 
-              placeholder="Enter street name, house/apartment number..."
-              class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition resize-none"
-            ></textarea>
-          </div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Yetkazib berish manzili</label>
+          <input type="text" id="delivery-address" required placeholder="Toshkent sh., Yunusobod t., 4-mavze" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
         </div>
 
-        <!-- Phone Number -->
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Contact Phone *</label>
-          <div class="relative">
-            <i class="fa-solid fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-            <input 
-              type="tel" 
-              id="customer-phone" 
-              required 
-              placeholder="+998 90 123 45 67"
-              class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"
-            />
-          </div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Telefon raqam</label>
+          <input type="tel" id="customer-phone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
         </div>
 
-        <!-- Payment Method Selection -->
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Payment Method</label>
-          <div class="grid grid-cols-3 gap-2" id="payment-methods">
-            <label class="cursor-pointer">
-              <input type="radio" name="payment" value="Click" class="peer sr-only" checked>
-              <div class="border border-slate-800 bg-slate-950 peer-checked:border-sky-500 peer-checked:bg-sky-500/10 peer-checked:text-sky-400 rounded-xl p-2.5 text-center transition">
-                <i class="fa-solid fa-mobile-screen block text-base mb-1"></i>
-                <span class="text-[11px] font-medium">Click</span>
-              </div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">To'lov turi</label>
+          <div class="grid grid-cols-2 gap-2 mt-1">
+            <label class="flex items-center space-x-2 border border-slate-700 bg-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-sky-500">
+              <input type="radio" name="payment" value="Cash" checked class="text-sky-500 focus:ring-0">
+              <span class="text-xs font-medium">Naqd pulli</span>
             </label>
-
-            <label class="cursor-pointer">
-              <input type="radio" name="payment" value="Payme" class="peer sr-only">
-              <div class="border border-slate-800 bg-slate-950 peer-checked:border-sky-500 peer-checked:bg-sky-500/10 peer-checked:text-sky-400 rounded-xl p-2.5 text-center transition">
-                <i class="fa-solid fa-credit-card block text-base mb-1"></i>
-                <span class="text-[11px] font-medium">Payme</span>
-              </div>
-            </label>
-
-            <label class="cursor-pointer">
-              <input type="radio" name="payment" value="Cash" class="peer sr-only">
-              <div class="border border-slate-800 bg-slate-950 peer-checked:border-sky-500 peer-checked:bg-sky-500/10 peer-checked:text-sky-400 rounded-xl p-2.5 text-center transition">
-                <i class="fa-solid fa-money-bill-wave block text-base mb-1"></i>
-                <span class="text-[11px] font-medium">Cash</span>
-              </div>
+            <label class="flex items-center space-x-2 border border-slate-700 bg-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-sky-500">
+              <input type="radio" name="payment" value="Card" class="text-sky-500 focus:ring-0">
+              <span class="text-xs font-medium">Karta orqali</span>
             </label>
           </div>
         </div>
 
-        <!-- Optional Order Note -->
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Comments / Special Requests</label>
-          <input 
-            type="text" 
-            id="order-note" 
-            placeholder="e.g. Extra sauce, don't ring doorbell"
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"
-          />
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Izoh (ixtiyoriy)</label>
+          <textarea id="order-note" rows="2" placeholder="Podyezd kodi, mo'ljal va h.k..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"></textarea>
         </div>
 
-        <div class="pt-2">
-          <button 
-            type="submit" 
-            class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition active-scale"
-          >
-            <i class="fa-paper-plane fa-solid text-xs"></i>
-            <span>Confirm & Send Order</span>
-          </button>
-        </div>
+        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-lg shadow-sky-500/20 transition-all">
+          Buyurtmani tasdiqlash
+        </button>
       </form>
     </div>
   </div>
 
+  <!-- JavaScript Logic -->
   <script>
-    // --- Mock Data ---
     const PRODUCTS = [
-      {
-        id: 'p1',
-        title: 'Double Smash Burger',
-        category: 'burgers',
-        price: 8.50,
-        description: 'Two crispy beef patties, melted cheddar, house sauce & pickles.',
-        image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'p2',
-        title: 'Spicy Chicken Zinger',
-        category: 'burgers',
-        price: 7.20,
-        description: 'Crispy fried chicken thigh, jalapeno slaw and spicy mayo.',
-        image: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'p3',
-        title: 'Truffle Fries',
-        category: 'sides',
-        price: 4.00,
-        description: 'Golden potato fries tossed in truffle oil and parmesan cheese.',
-        image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'p4',
-        title: 'Cold Brew Coffee',
-        category: 'drinks',
-        price: 3.50,
-        description: 'Smooth 16-hour steeped artisanal cold coffee blend.',
-        image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'p5',
-        title: 'Chocolate Fudge Shake',
-        category: 'desserts',
-        price: 5.00,
-        description: 'Rich dark chocolate ice cream shake topped with cream.',
-        image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'p6',
-        title: 'Fresh Mango Lemonade',
-        category: 'drinks',
-        price: 3.80,
-        description: 'Refreshing real mango puree mixed with sparkling citrus.',
-        image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=80'
-      }
+      { id: 1, title: 'Cheeseburger Combo', price: 6.50, emoji: '🍔', desc: 'Juicy beef, melted cheddar & fries' },
+      { id: 2, title: 'Pepperoni Pizza', price: 12.00, emoji: '🍕', desc: 'Crispy crust with double pepperoni' },
+      { id: 3, title: 'Crispy Chicken Wings', price: 7.99, emoji: '🍗', desc: '6 pcs spicy wings with dip' },
+      { id: 4, title: 'Classic Club Sandwich', price: 5.50, emoji: '🥪', desc: 'Triple decker with turkey & bacon' },
+      { id: 5, title: 'French Fries XXL', price: 3.00, emoji: '🍟', desc: 'Golden salty crunchy fries' },
+      { id: 6, title: 'Cold Coca-Cola 0.5L', price: 1.50, emoji: '🥤', desc: 'Refreshing original taste' }
     ];
 
-    const CATEGORIES = [
-      { id: 'all', label: 'All Items', icon: 'fa-border-all' },
-      { id: 'burgers', label: 'Burgers', icon: 'fa-burger' },
-      { id: 'sides', label: 'Sides', icon: 'fa-fries' },
-      { id: 'drinks', label: 'Drinks', icon: 'fa-wine-glass' },
-      { id: 'desserts', label: 'Desserts', icon: 'fa-ice-cream' }
-    ];
+    let cart = {};
 
-    // --- Application State ---
-    let cart = {}; // { productId: count }
-    let activeCategory = 'all';
-    let searchQuery = '';
-    let tg = window.Telegram?.WebApp;
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
 
-    // --- Initialization ---
-    window.addEventListener('DOMContentLoaded', () => {
-      initTelegramSDK();
-      renderCategoryTabs();
-      renderProducts();
-      updateCartUI();
-    });
-
-    // Initialize Telegram WebApp SDK
-    function initTelegramSDK() {
-      if (tg) {
-        tg.ready();
-        tg.expand(); // Auto expand app to fill screen
-        
-        // Dynamic user greeting from Telegram data
-        if (tg.initDataUnsafe?.user) {
-          const user = tg.initDataUnsafe.user;
-          document.getElementById('user-greeting').textContent = `Hello, ${user.first_name || 'Friend'} 👋`;
-        }
-
-        // Configure Telegram MainButton (Native look)
-        if (tg.MainButton) {
-          tg.MainButton.setParams({
-            text: 'VIEW ORDER',
-            color: '#0284c7',
-            text_color: '#ffffff'
-          });
-          tg.MainButton.onClick(openCartModal);
-        }
+    function triggerHaptic(style = 'light') {
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred(style);
       }
     }
 
-    // Trigger Telegram Haptic Feedback
-    function triggerHaptic(type = 'light') {
-      if (tg?.HapticFeedback) {
-        if (type === 'selection') tg.HapticFeedback.selectionChanged();
-        else tg.HapticFeedback.impactOccurred(type);
-      }
-    }
-
-    // Render Category Filter Pills
-    function renderCategoryTabs() {
-      const tabsContainer = document.getElementById('category-tabs');
-      tabsContainer.innerHTML = CATEGORIES.map(cat => {
-        const isActive = cat.id === activeCategory;
-        return `
-          <button 
-            onclick="setCategory('${cat.id}')"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition active-scale ${
-              isActive 
-                ? 'bg-sky-500 text-white shadow-md shadow-sky-500/20' 
-                : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200'
-            }"
-          >
-            <i class="fa-solid ${cat.icon} text-[11px]"></i>
-            <span>${cat.label}</span>
-          </button>
-        `;
-      }).join('');
-    }
-
-    function setCategory(catId) {
-      triggerHaptic('selection');
-      activeCategory = catId;
-      renderCategoryTabs();
-      renderProducts();
-      
-      const categoryObj = CATEGORIES.find(c => c.id === catId);
-      document.getElementById('category-heading').textContent = categoryObj ? categoryObj.label : 'Catalog';
-    }
-
-    function handleSearch() {
-      searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-      renderProducts();
-    }
-
-    // Filter Products based on category & search
-    function getFilteredProducts() {
-      return PRODUCTS.filter(p => {
-        const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
-        const matchesSearch = p.title.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery);
-        return matchesCategory && matchesSearch;
-      });
-    }
-
-    // Render Product Cards Grid
     function renderProducts() {
-      const grid = document.getElementById('product-grid');
-      const emptyState = document.getElementById('empty-state');
-      const filtered = getFilteredProducts();
-
-      document.getElementById('product-count').textContent = `${filtered.length} items`;
-
-      if (filtered.length === 0) {
-        grid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      grid.innerHTML = filtered.map(product => {
-        const qty = cart[product.id] || 0;
+      const container = document.getElementById('products-grid');
+      container.innerHTML = PRODUCTS.map(p => {
+        const qty = cart[p.id] || 0;
         return `
-          <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg shadow-black/20 hover:border-slate-700 transition">
-            <!-- Product Image -->
-            <div class="relative h-28 overflow-hidden bg-slate-950">
-              <img 
-                src="${product.image}" 
-                alt="${product.title}" 
-                class="w-full h-full object-cover transition duration-300 hover:scale-105"
-                loading="lazy"
-                onerror="this.src='https://placehold.co/400x300/0f172a/38bdf8?text=Food+Item'"
-              />
-              <span class="absolute top-2 right-2 bg-slate-950/80 backdrop-blur-md border border-slate-800 text-sky-400 text-xs font-bold px-2 py-0.5 rounded-lg">
-                $${product.price.toFixed(2)}
-              </span>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col justify-between hover:border-slate-700 transition-all">
+            <div>
+              <div class="text-4xl text-center py-3 bg-slate-950/50 rounded-xl mb-2">${p.emoji}</div>
+              <h3 class="font-bold text-sm line-clamp-1">${p.title}</h3>
+              <p class="text-[11px] text-slate-400 line-clamp-2 mt-0.5">${p.desc}</p>
             </div>
-
-            <!-- Info & Actions -->
-            <div class="p-3 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="font-bold text-xs text-slate-100 line-clamp-1">${product.title}</h3>
-                <p class="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">${product.description}</p>
-              </div>
-
-              <div class="mt-3 pt-2 border-t border-slate-800/60">
-                ${
-                  qty === 0 ? `
-                    <button 
-                      onclick="addToCart('${product.id}')"
-                      class="w-full bg-slate-800 hover:bg-sky-500 hover:text-white border border-slate-700/60 text-sky-400 text-xs font-semibold py-2 rounded-xl flex items-center justify-center gap-1.5 transition active-scale"
-                    >
-                      <i class="fa-solid fa-plus text-[10px]"></i>
-                      <span>Add</span>
-                    </button>
-                  ` : `
-                    <div class="flex items-center justify-between bg-slate-950 border border-sky-500/40 rounded-xl p-1">
-                      <button 
-                        onclick="removeFromCart('${product.id}')"
-                        class="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 flex items-center justify-center hover:bg-slate-700 active-scale"
-                      >
-                        <i class="fa-solid fa-minus text-[10px]"></i>
-                      </button>
-                      <span class="font-bold text-xs text-sky-400 px-2">${qty}</span>
-                      <button 
-                        onclick="addToCart('${product.id}')"
-                        class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center hover:bg-sky-400 active-scale"
-                      >
-                        <i class="fa-solid fa-plus text-[10px]"></i>
-                      </button>
-                    </div>
-                  `
-                }
-              </div>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="font-bold text-sky-400 text-sm">$${p.price.toFixed(2)}</span>
+              ${qty > 0 ? `
+                <div class="flex items-center space-x-2 bg-slate-800 rounded-lg p-1">
+                  <button onclick="updateQty(${p.id}, -1)" class="w-6 h-6 rounded-md bg-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-600">-</button>
+                  <span class="text-xs font-bold w-4 text-center">${qty}</span>
+                  <button onclick="updateQty(${p.id}, 1)" class="w-6 h-6 rounded-md bg-sky-500 text-white flex items-center justify-center font-bold text-xs hover:bg-sky-400">+</button>
+                </div>
+              ` : `
+                <button onclick="updateQty(${p.id}, 1)" class="bg-sky-500 hover:bg-sky-400 text-white px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors">
+                  <span>Qo'shish</span>
+                </button>
+              `}
             </div>
           </div>
         `;
       }).join('');
     }
 
-    // Cart State Mutations
-    function addToCart(productId) {
+    function updateQty(id, change) {
       triggerHaptic('light');
-      cart[productId] = (cart[productId] || 0) + 1;
-      updateCartUI();
+      cart[id] = (cart[id] || 0) + change;
+      if (cart[id] <= 0) delete cart[id];
       renderProducts();
-    }
-
-    function removeFromCart(productId) {
-      triggerHaptic('light');
-      if (cart[productId]) {
-        cart[productId] -= 1;
-        if (cart[productId] <= 0) delete cart[productId];
-      }
       updateCartUI();
-      renderProducts();
     }
 
     function getCartMetrics() {
       let totalCount = 0;
       let totalPrice = 0;
-
       Object.keys(cart).forEach(id => {
-        const product = PRODUCTS.find(p => p.id === id);
+        const product = PRODUCTS.find(p => p.id === parseInt(id));
         if (product) {
-          const qty = cart[id];
-          totalCount += qty;
-          totalPrice += product.price * qty;
+          totalCount += cart[id];
+          totalPrice += product.price * cart[id];
         }
       });
-
       return { totalCount, totalPrice };
     }
 
     function updateCartUI() {
       const { totalCount, totalPrice } = getCartMetrics();
-
-      // Update Header Badge
       const badge = document.getElementById('cart-badge');
+      const countEl = document.getElementById('cart-count');
+      const bottomBar = document.getElementById('bottom-cart-bar');
+      const bottomTotal = document.getElementById('bottom-cart-total');
+      const modalTotal = document.getElementById('modal-cart-total');
+
+      countEl.innerText = totalCount;
+      bottomTotal.innerText = `$${totalPrice.toFixed(2)}`;
+      modalTotal.innerText = `$${totalPrice.toFixed(2)}`;
+
       if (totalCount > 0) {
-        badge.textContent = totalCount;
         badge.classList.remove('hidden');
+        bottomBar.classList.remove('translate-y-full');
       } else {
         badge.classList.add('hidden');
+        bottomBar.classList.add('translate-y-full');
+        closeCartModal();
       }
-
-      // Update Floating Bottom Bar
-      const viewCartBtn = document.getElementById('view-cart-btn');
-      if (totalCount > 0) {
-        document.getElementById('floating-cart-count').textContent = `${totalCount} item${totalCount > 1 ? 's' : ''}`;
-        document.getElementById('floating-cart-total').textContent = `$${totalPrice.toFixed(2)}`;
-        viewCartBtn.classList.remove('hidden');
-        
-        // Sync Native Telegram MainButton if enabled
-        if (tg?.MainButton) {
-          tg.MainButton.setText(`VIEW ORDER ($${totalPrice.toFixed(2)})`);
-          tg.MainButton.show();
-        }
-      } else {
-        viewCartBtn.classList.add('hidden');
-        if (tg?.MainButton) tg.MainButton.hide();
-      }
-
-      // Render items inside Modal if opened
-      renderCartModalItems();
     }
 
-    // Render items list inside the slide-up modal
-    function renderCartModalItems() {
-      const container = document.getElementById('cart-items-container');
-      const { totalPrice } = getCartMetrics();
-      const itemIds = Object.keys(cart);
-
-      document.getElementById('cart-subtotal').textContent = `$${totalPrice.toFixed(2)}`;
-      document.getElementById('cart-total').textContent = `$${totalPrice.toFixed(2)}`;
-
-      if (itemIds.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-8 text-slate-500">
-            <i class="fa-solid fa-basket-shopping text-3xl mb-2 opacity-50"></i>
-            <p class="text-xs">Your shopping cart is empty.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = itemIds.map(id => {
-        const product = PRODUCTS.find(p => p.id === id);
-        const qty = cart[id];
-        const itemTotal = (product.price * qty).toFixed(2);
-
-        return `
-          <div class="flex items-center justify-between pt-2">
-            <div class="flex items-center gap-3">
-              <img src="${product.image}" class="w-12 h-12 rounded-xl object-cover bg-slate-950" />
-              <div>
-                <h4 class="font-bold text-xs text-slate-100">${product.title}</h4>
-                <span class="text-xs text-sky-400 font-semibold">$${itemTotal}</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-1">
-              <button onclick="removeFromCart('${product.id}')" class="w-6 h-6 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center active-scale">
-                <i class="fa-solid fa-minus text-[9px]"></i>
-              </button>
-              <span class="text-xs font-bold px-1 text-slate-200">${qty}</span>
-              <button onclick="addToCart('${product.id}')" class="w-6 h-6 rounded-lg bg-sky-500 text-white flex items-center justify-center active-scale">
-                <i class="fa-solid fa-plus text-[9px]"></i>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Modal Control Functions
     function openCartModal() {
-      const { totalCount } = getCartMetrics();
-      if (totalCount === 0) return;
-
-      triggerHaptic('impact');
-      renderCartModalItems();
+      triggerHaptic('medium');
+      renderCartItems();
       document.getElementById('cart-modal').classList.remove('hidden');
     }
 
@@ -681,7 +265,7 @@
 
     function openCheckoutModal() {
       closeCartModal();
-      triggerHaptic('impact');
+      triggerHaptic('medium');
       document.getElementById('checkout-modal').classList.remove('hidden');
     }
 
@@ -689,56 +273,86 @@
       document.getElementById('checkout-modal').classList.add('hidden');
     }
 
-    // Final Order Submit Action
+    function renderCartItems() {
+      const container = document.getElementById('cart-items');
+      const items = Object.keys(cart).map(id => {
+        const product = PRODUCTS.find(p => p.id === parseInt(id));
+        return { ...product, qty: cart[id] };
+      });
+
+      if (items.length === 0) {
+        container.innerHTML = `<p class="text-center text-slate-500 py-8 text-sm">Savat bo'sh</p>`;
+        return;
+      }
+
+      container.innerHTML = items.map(item => `
+        <div class="flex items-center justify-between pt-3">
+          <div class="flex items-center space-x-3">
+            <span class="text-2xl">${item.emoji}</span>
+            <div>
+              <p class="font-semibold text-sm">${item.title}</p>
+              <p class="text-xs text-slate-400">$${item.price.toFixed(2)} x ${item.qty}</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 bg-slate-800 rounded-lg p-1">
+            <button onclick="updateQty(${item.id}, -1); renderCartItems();" class="w-6 h-6 rounded bg-slate-700 font-bold text-xs">-</button>
+            <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+            <button onclick="updateQty(${item.id}, 1); renderCartItems();" class="w-6 h-6 rounded bg-sky-500 text-white font-bold text-xs">+</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // AYNAN SHU FUNKSIYA QOTISHNI (FREEZE) YO'QOTADI
     function submitOrder(event) {
-      event.preventDefault();
+      if (event) event.preventDefault();
+
       triggerHaptic('heavy');
 
-      const address = document.getElementById('delivery-address').value;
-      const phone = document.getElementById('customer-phone').value;
-      const payment = document.querySelector('input[name="payment"]:checked').value;
-      const note = document.getElementById('order-note').value;
+      const address = document.getElementById('delivery-address')?.value || 'Ko\'rsatilmadi';
+      const phone = document.getElementById('customer-phone')?.value || 'Ko\'rsatilmadi';
+      const payment = document.querySelector('input[name="payment"]:checked')?.value || 'Cash';
+      const note = document.getElementById('order-note')?.value || '';
 
-      const { totalCount, totalPrice } = getCartMetrics();
+      const { totalPrice } = getCartMetrics();
 
-      // Build Order Payload
       const orderPayload = {
         items: Object.keys(cart).map(id => {
-          const product = PRODUCTS.find(p => p.id === id);
+          const product = PRODUCTS.find(p => p.id === parseInt(id));
           return {
-            id: product.id,
-            title: product.title,
-            qty: cart[id],
-            price: product.price
+            id: id,
+            title: product ? product.title : 'Mahsulot',
+            quantity: cart[id],
+            price: product ? product.price : 0
           };
         }),
-        totalAmount: totalPrice.toFixed(2),
-        totalItems: totalCount,
-        customerInfo: {
-          address,
-          phone,
-          paymentMethod: payment,
-          note
-        },
-        timestamp: new Date().toISOString()
+        address: address,
+        phone: phone,
+        paymentMethod: payment,
+        note: note,
+        totalPrice: totalPrice
       };
 
-      console.log('Sending payload to Telegram:', orderPayload);
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tgApp = window.Telegram.WebApp;
+        tgApp.ready();
 
-      // If inside Telegram WebApp environment, transmit data back to Bot
-      if (tg && tg.sendData) {
-        tg.sendData(JSON.stringify(orderPayload));
+        try {
+          // Ma'lumotni Telegram botga yuborish
+          tgApp.sendData(JSON.stringify(orderPayload));
+          
+          // Telegram Mini App oynasini avtomashina yopish (Freeze-ning oldini oladi)
+          tgApp.close();
+        } catch (err) {
+          alert("Xatolik: " + err.message);
+        }
       } else {
-        // Fallback alert demo when tested in desktop browsers
-        alert(`🎉 Order Submitted Successfully!\n\nTotal: $${totalPrice.toFixed(2)}\nItems: ${totalCount}\nPayment: ${payment}\nAddress: ${address}`);
-        
-        // Reset App State
-        cart = {};
-        closeCheckoutModal();
-        updateCartUI();
-        renderProducts();
+        alert("Buyurtma yuborildi (Brauzer testi):\n" + JSON.stringify(orderPayload, null, 2));
       }
     }
+
+    renderProducts();
+    lucide.createIcons();
   </script>
 </body>
 </html>
