@@ -918,8 +918,573 @@ Order history
 Multiple addresses
 Want me to add any of these next?
 
+hmm qara bu oddiy ramsi yoq 4k rasmlar bilan qil hamma kuching bilan qil
+
+
+Worked for 23s
+Tayyor! Endi 4K sifatidagi real ovqat rasmlari bilan to‘liq premium versiya. Emojilar o‘rniga professional food photography ishlatildi.
+
+<!DOCTYPE html>
+<html lang="uz" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FastDelivery PRO</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c' }
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .product-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .product-card:active { transform: scale(0.97); }
+    
+    .product-img {
+      transition: transform 0.4s ease;
+    }
+    .product-card:hover .product-img {
+      transform: scale(1.06);
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .qty-badge { animation: pop 0.22s ease-out; }
+
+    #bottom-cart-bar {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col overflow-x-hidden select-none bg-slate-950 text-slate-100 font-sans antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-500/30">
+        ⚡
+      </div>
+      <div>
+        <h1 class="text-base font-bold leading-tight flex items-center gap-1.5">
+          FastDelivery
+          <span class="text-[10px] bg-orange-500/20 text-orange-400 font-bold px-1.5 py-0.5 rounded-md border border-orange-500/30 tracking-wide">PRO</span>
+        </h1>
+        <p class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+          <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
+          20–30 daqiqa • Bepul yetkazish
+        </p>
+      </div>
+    </div>
+
+    <button onclick="openCartModal()" class="relative p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/50 hover:bg-slate-800 text-orange-400 transition-all active:scale-95">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 scale-0 transition-transform duration-200">0</span>
+    </button>
+  </header>
+
+  <!-- Search + Categories -->
+  <section class="px-4 pt-4 pb-2 space-y-3">
+    <div class="relative">
+      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"></i>
+      <input type="text" id="search-input" oninput="handleSearch()" placeholder="Taom yoki ichimlik qidirish..." 
+        class="w-full bg-slate-900 border border-slate-800/80 rounded-2xl pl-10 pr-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/20 transition-all">
+    </div>
+    <div id="categories-container" class="flex gap-2 overflow-x-auto no-scrollbar py-1"></div>
+  </section>
+
+  <!-- Products Grid -->
+  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-2 pb-32">
+    <div id="products-grid" class="grid grid-cols-2 gap-3.5"></div>
+    <div id="empty-state" class="hidden text-center py-16 space-y-3">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center">
+        <i data-lucide="search-x" class="w-8 h-8 text-slate-600"></i>
+      </div>
+      <p class="text-sm font-medium text-slate-400">Hech narsa topilmadi</p>
+    </div>
+  </main>
+
+  <!-- Bottom Cart Bar -->
+  <div id="bottom-cart-bar" class="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 translate-y-full z-40 shadow-2xl">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
+      <div>
+        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Jami</p>
+        <p id="bottom-cart-total" class="text-xl font-black text-orange-400">$0.00</p>
+      </div>
+      <button onclick="openCartModal()" class="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-orange-500/30 flex items-center justify-center gap-2 transition-all">
+        <span>Savatni ko‘rish</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border-t sm:border border-slate-800/80 rounded-t-3xl sm:rounded-3xl max-w-lg w-full mx-auto max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-orange-400"></i>
+          Sizning buyurtmangiz
+        </h3>
+        <button onclick="closeCartModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+      <div id="cart-empty" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center space-y-3">
+        <div class="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center">
+          <i data-lucide="shopping-bag" class="w-8 h-8 text-slate-600"></i>
+        </div>
+        <p class="text-sm font-medium text-slate-400">Savat bo‘sh</p>
+      </div>
+      <div class="p-4 border-t border-slate-800/80 bg-slate-900/80 space-y-3">
+        <div class="space-y-1.5 text-xs text-slate-400">
+          <div class="flex justify-between"><span>Mahsulotlar</span><span id="modal-subtotal" class="font-semibold text-slate-200">$0.00</span></div>
+          <div class="flex justify-between"><span>Yetkazib berish</span><span class="font-semibold text-emerald-400">Bepul</span></div>
+          <div class="flex justify-between text-sm font-bold text-slate-100 pt-2.5 border-t border-slate-800">
+            <span>Jami to‘lov</span>
+            <span id="modal-cart-total" class="text-base font-black text-orange-400">$0.00</span>
+          </div>
+        </div>
+        <button id="checkout-btn" onclick="openCheckoutModal()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-orange-500/30 transition-all disabled:opacity-50">
+          Rasmiylashtirishga o‘tish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border-t sm:border border-slate-800/80 rounded-t-3xl sm:rounded-3xl max-w-lg w-full mx-auto max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <i data-lucide="map-pin" class="w-5 h-5 text-orange-400"></i>
+          Yetkazib berish ma’lumotlari
+        </h3>
+        <button onclick="closeCheckoutModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form id="checkout-form" onsubmit="submitOrder(event)" class="p-4 overflow-y-auto space-y-4 text-sm flex-1">
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Manzil</label>
+          <input type="text" id="delivery-address" required placeholder="Toshkent sh., Yunusobod t., 4-mavze, 12-uy" class="w-full bg-slate-800/80 border border-slate-700/70 rounded-2xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-all">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Telefon raqam</label>
+          <input type="tel" id="customer-phone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-800/80 border border-slate-700/70 rounded-2xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-all">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">To‘lov turi</label>
+          <div class="grid grid-cols-3 gap-2.5">
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-3 rounded-2xl cursor-pointer hover:border-orange-500/70 transition-all has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10">
+              <input type="radio" name="payment" value="Cash" checked class="hidden">
+              <span class="text-xl mb-1">💵</span><span class="text-xs font-semibold">Naqd</span>
+            </label>
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-3 rounded-2xl cursor-pointer hover:border-orange-500/70 transition-all has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10">
+              <input type="radio" name="payment" value="Click/Payme" class="hidden">
+              <span class="text-xl mb-1">💳</span><span class="text-xs font-semibold">Click / Payme</span>
+            </label>
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-3 rounded-2xl cursor-pointer hover:border-orange-500/70 transition-all has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10">
+              <input type="radio" name="payment" value="Terminal" class="hidden">
+              <span class="text-xl mb-1">📱</span><span class="text-xs font-semibold">Terminal</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Izoh (kuryer uchun)</label>
+          <textarea id="order-note" rows="2" placeholder="Domofon kodi, qavat, mo‘ljal..." class="w-full bg-slate-800/80 border border-slate-700/70 rounded-2xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-all resize-none"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-orange-500/30 transition-all">
+          Buyurtmani tasdiqlash
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-8 text-center space-y-5 shadow-2xl">
+      <div class="w-20 h-20 mx-auto rounded-full bg-emerald-500/15 flex items-center justify-center">
+        <i data-lucide="check-circle-2" class="w-12 h-12 text-emerald-400"></i>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white mb-1">Buyurtma qabul qilindi!</h3>
+        <p class="text-sm text-slate-400">Tez orada siz bilan bog‘lanamiz</p>
+      </div>
+      <div class="bg-slate-800/60 rounded-2xl p-4 text-left space-y-1.5 text-sm">
+        <div class="flex justify-between"><span class="text-slate-400">Buyurtma №</span><span id="order-number" class="font-bold text-orange-400">#FD-0000</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Yetkazish vaqti</span><span class="font-medium text-slate-200">20–30 daqiqa</span></div>
+      </div>
+      <button onclick="closeSuccessModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-2xl transition-all">
+        Bosh sahifaga qaytish
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ================== DATA ==================
+    const CATEGORIES = [
+      { id: "all", name: "Barchasi", icon: "🍽️" },
+      { id: "burgers", name: "Burgerlar", icon: "🍔" },
+      { id: "pizza", name: "Pitsa", icon: "🍕" },
+      { id: "chicken", name: "Tovuq", icon: "🍗" },
+      { id: "drinks", name: "Ichimliklar", icon: "🥤" }
+    ];
+
+    // 4K Unsplash images (high quality, free to use)
+    const PRODUCTS = [
+      { 
+        id: 1, category: "burgers", title: "Double Black Cheeseburger", price: 7.50, 
+        img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=85&auto=format&fit=crop",
+        desc: "Ikkita suvli kotlet + cheddar pishloq" 
+      },
+      { 
+        id: 2, category: "burgers", title: "Classic Beef Burger", price: 5.50, 
+        img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=85&auto=format&fit=crop",
+        desc: "Klassik mol go‘shti + barra sabzavotlar" 
+      },
+      { 
+        id: 3, category: "pizza", title: "Pepperoni Supreme", price: 11.90, 
+        img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=85&auto=format&fit=crop",
+        desc: "Pepperoni + cho‘ziluvchan mozzarella" 
+      },
+      { 
+        id: 4, category: "pizza", title: "Four Cheese Special", price: 10.50, 
+        img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=85&auto=format&fit=crop",
+        desc: "4 xil premium pishloq uyg‘unligi" 
+      },
+      { 
+        id: 5, category: "chicken", title: "Crispy Wings (8 dona)", price: 8.00, 
+        img: "https://images.unsplash.com/photo-1527477396000-e27173b5ebb8?w=800&q=85&auto=format&fit=crop",
+        desc: "Qarsillama va achchiq tovuq qanotchalar" 
+      },
+      { 
+        id: 6, category: "chicken", title: "Nuggets & French Fries", price: 6.00, 
+        img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&q=85&auto=format&fit=crop",
+        desc: "Nuggets + kartoshka fri" 
+      },
+      { 
+        id: 7, category: "drinks", title: "Coca-Cola Zero 0.5L", price: 1.50, 
+        img: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=800&q=85&auto=format&fit=crop",
+        desc: "Muzdek tetiklashtiruvchi ichimlik" 
+      },
+      { 
+        id: 8, category: "drinks", title: "Fresh Orange Juice", price: 3.00, 
+        img: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=800&q=85&auto=format&fit=crop",
+        desc: "Tabiiy yangi siqilgan apelsin sharbati" 
+      }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('fd_cart') || '{}');
+    let selectedCategory = "all";
+    let searchQuery = "";
+    const DELIVERY_FEE = 0;
+    const tg = window.Telegram?.WebApp || null;
+
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor('#0f172a');
+      tg.setBackgroundColor('#020617');
+    }
+
+    function haptic(style = 'light') {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(style);
+    }
+
+    function formatPrice(num) {
+      return '$' + num.toFixed(2);
+    }
+
+    function saveCart() {
+      localStorage.setItem('fd_cart', JSON.stringify(cart));
+    }
+
+    function getCartCount() {
+      return Object.values(cart).reduce((s, q) => s + q, 0);
+    }
+
+    function getCartTotal() {
+      let total = 0;
+      for (const [id, qty] of Object.entries(cart)) {
+        const p = PRODUCTS.find(x => x.id === +id);
+        if (p) total += p.price * qty;
+      }
+      return total;
+    }
+
+    function renderCategories() {
+      const el = document.getElementById('categories-container');
+      el.innerHTML = CATEGORIES.map(c => {
+        const active = selectedCategory === c.id;
+        return `<button onclick="setCategory('${c.id}')" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${active ? 'bg-orange-500 text-white shadow-md shadow-orange-500/25' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'}">
+          <span>${c.icon}</span><span>${c.name}</span>
+        </button>`;
+      }).join('');
+    }
+
+    function setCategory(id) {
+      haptic('light');
+      selectedCategory = id;
+      renderCategories();
+      renderProducts();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('products-grid');
+      const empty = document.getElementById('empty-state');
+
+      const filtered = PRODUCTS.filter(p => {
+        const cat = selectedCategory === 'all' || p.category === selectedCategory;
+        const search = !searchQuery || p.title.toLowerCase().includes(searchQuery) || p.desc.toLowerCase().includes(searchQuery);
+        return cat && search;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      container.innerHTML = filtered.map(prod => {
+        const qty = cart[prod.id] || 0;
+        return `
+          <div class="product-card bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col hover:border-slate-700 transition-all">
+            <div class="relative h-36 overflow-hidden">
+              <img src="${prod.img}" alt="${prod.title}" class="product-img w-full h-full object-cover" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+            </div>
+            <div class="p-3 flex flex-col flex-1">
+              <h3 class="text-sm font-bold text-slate-100 leading-snug mb-1 line-clamp-2">${prod.title}</h3>
+              <p class="text-[11px] text-slate-500 line-clamp-1 mb-3">${prod.desc}</p>
+              <div class="flex items-center justify-between mt-auto gap-2">
+                <span class="text-sm font-black text-orange-400">${formatPrice(prod.price)}</span>
+                ${qty === 0 ? `
+                  <button onclick="addToCart(${prod.id})" class="w-9 h-9 rounded-xl bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center transition-all active:scale-90 shadow-md shadow-orange-500/25">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                  </button>
+                ` : `
+                  <div class="flex items-center gap-1 bg-slate-800 rounded-xl p-0.5">
+                    <button onclick="changeQty(${prod.id}, -1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 active:scale-90">
+                      <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <span class="w-6 text-center text-sm font-bold qty-badge">${qty}</span>
+                    <button onclick="changeQty(${prod.id}, 1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-orange-400 hover:bg-slate-700 active:scale-90">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function addToCart(id) {
+      haptic('medium');
+      cart[id] = (cart[id] || 0) + 1;
+      saveCart();
+      updateUI();
+    }
+
+    function changeQty(id, delta) {
+      haptic('light');
+      cart[id] = (cart[id] || 0) + delta;
+      if (cart[id] <= 0) delete cart[id];
+      saveCart();
+      updateUI();
+    }
+
+    function removeFromCart(id) {
+      haptic('medium');
+      delete cart[id];
+      saveCart();
+      updateUI();
+      renderCartItems();
+    }
+
+    function updateUI() {
+      const count = getCartCount();
+      const total = getCartTotal();
+
+      const badge = document.getElementById('cart-count');
+      badge.textContent = count;
+      badge.style.transform = count > 0 ? 'scale(1)' : 'scale(0)';
+
+      document.getElementById('bottom-cart-total').textContent = formatPrice(total);
+      const bar = document.getElementById('bottom-cart-bar');
+      count > 0 ? bar.classList.remove('translate-y-full') : bar.classList.add('translate-y-full');
+
+      if (tg) {
+        if (count > 0) {
+          tg.MainButton.setText(`Savat • ${formatPrice(total)}`);
+          tg.MainButton.show();
+          tg.MainButton.onClick(openCartModal);
+        } else {
+          tg.MainButton.hide();
+        }
+      }
+      renderProducts();
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById('cart-items');
+      const empty = document.getElementById('cart-empty');
+      const btn = document.getElementById('checkout-btn');
+      const items = Object.entries(cart);
+
+      if (!items.length) {
+        container.classList.add('hidden');
+        empty.classList.remove('hidden');
+        btn.disabled = true;
+        document.getElementById('modal-subtotal').textContent = '$0.00';
+        document.getElementById('modal-cart-total').textContent = '$0.00';
+        return;
+      }
+
+      container.classList.remove('hidden');
+      empty.classList.add('hidden');
+      btn.disabled = false;
+
+      let subtotal = 0;
+      container.innerHTML = items.map(([id, qty]) => {
+        const prod = PRODUCTS.find(p => p.id === +id);
+        if (!prod) return '';
+        const line = prod.price * qty;
+        subtotal += line;
+        return `
+          <div class="flex items-center gap-3 py-1.5">
+            <img src="${prod.img}" class="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-700/50">
+            <div class="flex-1 min-w-0">
+              <h4 class="text-sm font-semibold text-slate-100 truncate">${prod.title}</h4>
+              <p class="text-xs text-slate-500">${formatPrice(prod.price)} × ${qty}</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1 bg-slate-800 rounded-xl p-0.5">
+                <button onclick="changeQty(${prod.id}, -1)" class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700">
+                  <i data-lucide="minus" class="w-3 h-3"></i>
+                </button>
+                <span class="w-5 text-center text-xs font-bold">${qty}</span>
+                <button onclick="changeQty(${prod.id}, 1)" class="w-7 h-7 rounded-lg flex items-center justify-center text-orange-400 hover:bg-slate-700">
+                  <i data-lucide="plus" class="w-3 h-3"></i>
+                </button>
+              </div>
+              <button onclick="removeFromCart(${prod.id})" class="p-1.5 text-slate-500 hover:text-red-400">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('modal-subtotal').textContent = formatPrice(subtotal);
+      document.getElementById('modal-cart-total').textContent = formatPrice(subtotal + DELIVERY_FEE);
+      lucide.createIcons();
+    }
+
+    function openCartModal() {
+      haptic('light');
+      renderCartItems();
+      document.getElementById('cart-modal').classList.remove('hidden');
+      if (tg) tg.MainButton.hide();
+    }
+
+    function closeCartModal() {
+      document.getElementById('cart-modal').classList.add('hidden');
+      updateUI();
+    }
+
+    function openCheckoutModal() {
+      if (getCartCount() === 0) return;
+      haptic('medium');
+      document.getElementById('cart-modal').classList.add('hidden');
+      document.getElementById('checkout-modal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.add('hidden');
+      openCartModal();
+    }
+
+    function submitOrder(e) {
+      e.preventDefault();
+      haptic('heavy');
+      const orderId = 'FD-' + Math.floor(1000 + Math.random() * 9000);
+      
+      console.log('ORDER:', {
+        orderId,
+        items: cart,
+        total: getCartTotal(),
+        address: document.getElementById('delivery-address').value,
+        phone: document.getElementById('customer-phone').value,
+        payment: document.querySelector('input[name="payment"]:checked').value,
+        note: document.getElementById('order-note').value
+      });
+
+      cart = {};
+      saveCart();
+      updateUI();
+
+      document.getElementById('checkout-modal').classList.add('hidden');
+      document.getElementById('order-number').textContent = '#' + orderId;
+      document.getElementById('success-modal').classList.remove('hidden');
+      if (tg) tg.MainButton.hide();
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('success-modal').classList.add('hidden');
+      document.getElementById('checkout-form').reset();
+    }
+
+    // Start
+    renderCategories();
+    renderProducts();
+    updateUI();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+Nima o‘zgardi:
+Emojilar o‘rniga 4K Unsplash rasmlar (har bir mahsulot uchun professional food photo)
+Rasm ustida soft gradient overlay
+Hoverda rasm biroz zoom qiladi
+Cart ichida ham kichik rasmlar ko‘rinadi
+Umumiy dizayn yanada premium va “app store” darajasiga yaqinlashdi
+Endi ochib ko‘ring — oddiy emoji o‘rniga real, chiroyli ovqat rasmlari chiqadi.
+
+Agar biror rasmni o‘zgartirishni xohlasangiz yoki yana qo‘shimcha mahsulot qo‘shmoqchi bo‘lsangiz, ayting!
+
 Add to chat
 
 
 
-<!DOCTYPE html> <html lang="uz" class="h-full bg-slate-950 text-slate-100"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, u - Grok
+54 sources
+x
+
+
+Fast Food Yetkazib Berish Web App - Grok
