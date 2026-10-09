@@ -18,7 +18,7 @@
           colors: {
             brand: {
               50: '#fff7ed',
-              500: '#f97316', // Premium Orange Accent
+              500: '#f97316',
               600: '#ea580c',
               700: '#c2410c'
             }
@@ -31,14 +31,13 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    /* Custom Scrollbar for smooth horizontal scrolling */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="h-full flex flex-col justify-between overflow-x-hidden select-none bg-slate-950 text-slate-100 font-sans antialiased">
 
-  <!-- Sticky Header -->
+  <!-- Header -->
   <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-500/20">
@@ -50,12 +49,12 @@
           <span class="text-[10px] bg-orange-500/20 text-orange-400 font-semibold px-1.5 py-0.5 rounded-md border border-orange-500/30">PRO</span>
         </h1>
         <p class="text-xs text-slate-400 flex items-center gap-1">
-          <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i> 20-30 daqiqa • Bepul yetkazish*
+          <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i> 20-30 daqiqa • Bepul yetkazish
         </p>
       </div>
     </div>
 
-    <!-- Cart Badge Top Right -->
+    <!-- Cart Badge Button -->
     <button onclick="openCartModal()" id="cart-badge-btn" class="relative p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/50 hover:bg-slate-800 text-orange-400 transition-all active:scale-95">
       <i data-lucide="shopping-bag" class="w-5 h-5"></i>
       <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 scale-0 transition-transform duration-200">0</span>
@@ -64,15 +63,13 @@
 
   <!-- Search & Category Filter Section -->
   <section class="p-4 pb-2 space-y-3 bg-slate-950">
-    <!-- Search Bar -->
     <div class="relative">
       <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"></i>
       <input type="text" id="search-input" oninput="handleSearch()" placeholder="Taom yoki ichimlik qidirish..." class="w-full bg-slate-900 border border-slate-800/80 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500/50 transition-colors">
     </div>
 
-    <!-- Categories horizontal scroll -->
     <div id="categories-container" class="flex space-x-2 overflow-x-auto no-scrollbar py-1">
-      <!-- Injected via JS -->
+      <!-- Dynamic Categories -->
     </div>
   </section>
 
@@ -87,7 +84,7 @@
     </div>
   </main>
 
-  <!-- Floating Bottom Bar -->
+  <!-- Bottom Cart Bar -->
   <div id="bottom-cart-bar" class="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 transform translate-y-full transition-transform duration-300 z-40 shadow-2xl">
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
       <div>
@@ -167,17 +164,17 @@
         <div>
           <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">To'lov turi</label>
           <div class="grid grid-cols-3 gap-2">
-            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 transition-all">
               <input type="radio" name="payment" value="Cash" checked class="hidden">
               <span class="text-base mb-0.5">💵</span>
               <span class="text-xs font-semibold">Naqd</span>
             </label>
-            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 transition-all">
               <input type="radio" name="payment" value="Click/Payme" class="hidden">
               <span class="text-base mb-0.5">💳</span>
               <span class="text-xs font-semibold">Click / Payme</span>
             </label>
-            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 transition-all">
               <input type="radio" name="payment" value="Terminal" class="hidden">
               <span class="text-base mb-0.5">📱</span>
               <span class="text-xs font-semibold">Terminal</span>
@@ -197,246 +194,102 @@
     </div>
   </div>
 
-  <!-- JS App Core -->
+  <!-- JavaScript Code -->
   <script>
-    const CATEGORIES = [
-      { id: 'all', name: 'Barchasi', icon: '🍽️' },
-      { id: 'burgers', name: 'Burgers', icon: '🍔' },
-      { id: 'pizza', name: 'Pizze', icon: '🍕' },
-      { id: 'chicken', name: 'Tovuq', icon: '🍗' },
-      { id: 'drinks', name: 'Ichimliklar', icon: '🥤' }
+    var CATEGORIES = [
+      { id: "all", name: "Barchasi", icon: "🍽️" },
+      { id: "burgers", name: "Burgers", icon: "🍔" },
+      { id: "pizza", name: "Pitsa", icon: "🍕" },
+      { id: "chicken", name: "Tovuq", icon: "🍗" },
+      { id: "drinks", name: "Ichimliklar", icon: "🥤" }
     ];
 
-    const PRODUCTS = [
-      { id: 1, category: 'burgers', title: 'Double Black Cheeseburger', price: 7.50, emoji: '🍔', desc: 'Ikkita suvli kotlet, cheddar pishlog\'i, maxsus sous' },
-      { id: 2, category: 'burgers', title: 'Classic Beef Burger', price: 5.50, emoji: '🍔', desc: 'Klassik mol go\'shti va barra sabzavotlar' },
-      { id: 3, category: 'pizza', title: 'Pepperoni Supreme', price: 11.90, emoji: '🍕', desc: 'Mo'l pepperoni va cho'ziluvchan mosarella' },
-      { id: 4, category: 'pizza', title: 'Four Cheese Special', price: 10.50, emoji: '🧀', desc: '4 xil premium pishloq uyg'unligi' },
-      { id: 5, category: 'chicken', title: 'Crispy Wings (8 dona)', price: 8.00, emoji: '🍗', desc: 'Qarsillama va achchiq tovuq qanotchalari' },
-      { id: 6, category: 'chicken', title: 'Nuggets & French Fries', price: 6.00, emoji: '🍟', desc: 'Nuggetslar kartoshka fri bilan' },
-      { id: 7, category: 'drinks', title: 'Coca-Cola Zero 0.5L', price: 1.50, emoji: '🥤', desc: 'Muzdek tetiklashtiruvchi ichimlik' },
-      { id: 8, category: 'drinks', title: 'Fresh Orange Juice', price: 3.00, emoji: '🧃', desc: 'Tabiiy yangi siqilgan apelsin sharbati' }
+    var PRODUCTS = [
+      { id: 1, category: "burgers", title: "Double Black Cheeseburger", price: 7.50, emoji: "🍔", desc: "Ikkita suvli kotlet va cheddar pishlogi" },
+      { id: 2, category: "burgers", title: "Classic Beef Burger", price: 5.50, emoji: "🍔", desc: "Klassik mol goshti va barra sabzavotlar" },
+      { id: 3, category: "pizza", title: "Pepperoni Supreme", price: 11.90, emoji: "🍕", desc: "Mol pepperoni va choziluvchan mosarella" },
+      { id: 4, category: "pizza", title: "Four Cheese Special", price: 10.50, emoji: "🧀", desc: "4 xil premium pishloq uygunligi" },
+      { id: 5, category: "chicken", title: "Crispy Wings (8 dona)", price: 8.00, emoji: "🍗", desc: "Qarsillama va achchiq tovuq qanotchalari" },
+      { id: 6, category: "chicken", title: "Nuggets & French Fries", price: 6.00, emoji: "🍟", desc: "Nuggetslar kartoshka fri bilan" },
+      { id: 7, category: "drinks", title: "Coca-Cola Zero 0.5L", price: 1.50, emoji: "🥤", desc: "Muzdek tetiklashtiruvchi ichimlik" },
+      { id: 8, category: "drinks", title: "Fresh Orange Juice", price: 3.00, emoji: "🧃", desc: "Tabiiy yangi siqilgan apelsin sharbati" }
     ];
 
-    let cart = {};
-    let selectedCategory = 'all';
-    let searchQuery = '';
+    var cart = {};
+    var selectedCategory = "all";
+    var searchQuery = "";
 
-    const tg = window.Telegram?.WebApp;
+    var tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) {
       tg.ready();
       tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor('#0f172a');
     }
 
-    function triggerHaptic(style = 'light') {
-      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(style);
+    function triggerHaptic(style) {
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred(style || "light");
+      }
     }
 
     function renderCategories() {
-      const container = document.getElementById('categories-container');
-      container.innerHTML = CATEGORIES.map(c => `
-        <button onclick="setCategory('${c.id}')" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${selectedCategory === c.id ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}">
-          <span>${c.icon}</span>
-          <span>${c.name}</span>
-        </button>
-      `).join('');
+      var container = document.getElementById("categories-container");
+      if (!container) return;
+      var html = "";
+      for (var i = 0; i < CATEGORIES.length; i++) {
+        var c = CATEGORIES[i];
+        var isSelected = selectedCategory === c.id;
+        var activeClass = isSelected ? "bg-orange-500 text-white shadow-md shadow-orange-500/20" : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white";
+        html += '<button onclick="setCategory(\'' + c.id + '\')" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ' + activeClass + '">';
+        html += '<span>' + c.icon + '</span>';
+        html += '<span>' + c.name + '</span>';
+        html += '</button>';
+      }
+      container.innerHTML = html;
     }
 
     function setCategory(id) {
-      triggerHaptic('light');
+      triggerHaptic("light");
       selectedCategory = id;
       renderCategories();
       renderProducts();
     }
 
     function handleSearch() {
-      searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-      renderProducts();
+      var input = document.getElementById("search-input");
+      if (input) {
+        searchQuery = input.value.toLowerCase().trim();
+        renderProducts();
+      }
     }
 
     function renderProducts() {
-      const container = document.getElementById('products-grid');
-      const emptyState = document.getElementById('empty-state');
+      var container = document.getElementById("products-grid");
+      var emptyState = document.getElementById("empty-state");
+      if (!container) return;
 
-      const filtered = PRODUCTS.filter(p => {
-        const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
-        const matchesSearch = p.title.toLowerCase().includes(searchQuery) || p.desc.toLowerCase().includes(searchQuery);
-        return matchesCategory && matchesSearch;
-      });
+      var filtered = [];
+      for (var i = 0; i < PRODUCTS.length; i++) {
+        var p = PRODUCTS[i];
+        var matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
+        var matchesSearch = p.title.toLowerCase().indexOf(searchQuery) !== -1 || p.desc.toLowerCase().indexOf(searchQuery) !== -1;
+        if (matchesCategory && matchesSearch) {
+          filtered.push(p);
+        }
+      }
 
       if (filtered.length === 0) {
-        container.innerHTML = '';
-        emptyState.classList.remove('hidden');
+        container.innerHTML = "";
+        if (emptyState) emptyState.classList.remove("hidden");
         return;
       }
 
-      emptyState.classList.add('hidden');
-      container.innerHTML = filtered.map(p => {
-        const qty = cart[p.id] || 0;
-        return `
-          <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3 flex flex-col justify-between hover:border-slate-700/80 transition-all">
-            <div>
-              <div class="text-4xl text-center py-3 bg-slate-950/60 rounded-xl mb-2.5 select-none">${p.emoji}</div>
-              <h3 class="font-bold text-sm leading-tight text-slate-100 line-clamp-1">${p.title}</h3>
-              <p class="text-[11px] text-slate-400 line-clamp-2 mt-1 leading-relaxed">${p.desc}</p>
-            </div>
-            <div class="mt-3.5 flex items-center justify-between pt-2 border-t border-slate-800/50">
-              <span class="font-black text-orange-400 text-sm">$${p.price.toFixed(2)}</span>
-              ${qty > 0 ? `
-                <div class="flex items-center space-x-1.5 bg-slate-800 rounded-xl p-1 border border-slate-700/50">
-                  <button onclick="updateQty(${p.id}, -1)" class="w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-600 text-slate-200 active:scale-90 transition-transform">-</button>
-                  <span class="text-xs font-black w-4 text-center text-orange-400">${qty}</span>
-                  <button onclick="updateQty(${p.id}, 1)" class="w-6 h-6 rounded-lg bg-orange-500 text-white flex items-center justify-center font-bold text-xs hover:bg-orange-400 active:scale-90 transition-transform">+</button>
-                </div>
-              ` : `
-                <button onclick="updateQty(${p.id}, 1)" class="bg-orange-500/10 hover:bg-orange-500 text-orange-400 hover:text-white border border-orange-500/30 px-3 py-1.5 rounded-xl font-bold text-xs transition-all active:scale-95">
-                  + Qo'shish
-                </button>
-              `}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
+      if (emptyState) emptyState.classList.add("hidden");
 
-    function updateQty(id, change) {
-      triggerHaptic('light');
-      cart[id] = (cart[id] || 0) + change;
-      if (cart[id] <= 0) delete cart[id];
-      renderProducts();
-      updateCartUI();
-    }
+      var html = "";
+      for (var j = 0; j < filtered.length; j++) {
+        var prod = filtered[j];
+        var qty = cart[prod.id] || 0;
 
-    function getCartMetrics() {
-      let subtotal = 0;
-      let totalCount = 0;
-      Object.keys(cart).forEach(id => {
-        const p = PRODUCTS.find(prod => prod.id === parseInt(id));
-        if (p) {
-          subtotal += p.price * cart[id];
-          totalCount += cart[id];
-        }
-      });
-      const delivery = subtotal >= 15 || subtotal === 0 ? 0 : 1.50;
-      return { subtotal, delivery, totalPrice: subtotal + delivery, totalCount };
-    }
-
-    function updateCartUI() {
-      const { subtotal, delivery, totalPrice, totalCount } = getCartMetrics();
-      const badgeBtn = document.getElementById('cart-badge-btn');
-      const countEl = document.getElementById('cart-count');
-      const bottomBar = document.getElementById('bottom-cart-bar');
-
-      countEl.innerText = totalCount;
-      document.getElementById('bottom-cart-total').innerText = `$${totalPrice.toFixed(2)}`;
-      document.getElementById('modal-subtotal').innerText = `$${subtotal.toFixed(2)}`;
-      document.getElementById('modal-delivery').innerText = delivery === 0 ? 'Bepul' : `$${delivery.toFixed(2)}`;
-      document.getElementById('modal-cart-total').innerText = `$${totalPrice.toFixed(2)}`;
-
-      if (totalCount > 0) {
-        countEl.classList.remove('scale-0');
-        bottomBar.classList.remove('translate-y-full');
-      } else {
-        countEl.classList.add('scale-0');
-        bottomBar.classList.add('translate-y-full');
-        closeCartModal();
-      }
-    }
-
-    function openCartModal() {
-      if (getCartMetrics().totalCount === 0) return;
-      triggerHaptic('medium');
-      renderCartItems();
-      document.getElementById('cart-modal').classList.remove('hidden');
-    }
-
-    function closeCartModal() {
-      document.getElementById('cart-modal').classList.add('hidden');
-    }
-
-    function openCheckoutModal() {
-      closeCartModal();
-      triggerHaptic('medium');
-      document.getElementById('checkout-modal').classList.remove('hidden');
-    }
-
-    function closeCheckoutModal() {
-      document.getElementById('checkout-modal').classList.add('hidden');
-    }
-
-    function renderCartItems() {
-      const container = document.getElementById('cart-items');
-      const items = Object.keys(cart).map(id => ({
-        ...PRODUCTS.find(p => p.id === parseInt(id)),
-        qty: cart[id]
-      }));
-
-      container.innerHTML = items.map(item => `
-        <div class="flex items-center justify-between pt-3">
-          <div class="flex items-center space-x-3">
-            <span class="text-2xl">${item.emoji}</span>
-            <div>
-              <p class="font-bold text-sm text-slate-100">${item.title}</p>
-              <p class="text-xs text-slate-400">$${item.price.toFixed(2)} × ${item.qty}</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-1.5 bg-slate-800 rounded-xl p-1 border border-slate-700/50">
-            <button onclick="updateQty(${item.id}, -1); renderCartItems();" class="w-6 h-6 rounded-lg bg-slate-700 font-bold text-xs">-</button>
-            <span class="text-xs font-black w-4 text-center text-orange-400">${item.qty}</span>
-            <button onclick="updateQty(${item.id}, 1); renderCartItems();" class="w-6 h-6 rounded-lg bg-orange-500 text-white font-bold text-xs">+</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function submitOrder(event) {
-      if (event) event.preventDefault();
-      triggerHaptic('heavy');
-
-      const address = document.getElementById('delivery-address')?.value || 'Ko\'rsatilmadi';
-      const phone = document.getElementById('customer-phone')?.value || 'Ko\'rsatilmadi';
-      const payment = document.querySelector('input[name="payment"]:checked')?.value || 'Cash';
-      const note = document.getElementById('order-note')?.value || '';
-
-      const { subtotal, delivery, totalPrice } = getCartMetrics();
-
-      const orderPayload = {
-        items: Object.keys(cart).map(id => {
-          const p = PRODUCTS.find(prod => prod.id === parseInt(id));
-          return {
-            id: id,
-            title: p ? p.title : 'Mahsulot',
-            quantity: cart[id],
-            price: p ? p.price : 0
-          };
-        }),
-        address: address,
-        phone: phone,
-        paymentMethod: payment,
-        note: note,
-        subtotal: subtotal,
-        deliveryFee: delivery,
-        totalPrice: totalPrice
-      };
-
-      if (window.Telegram?.WebApp) {
-        const tgApp = window.Telegram.WebApp;
-        tgApp.ready();
-        try {
-          tgApp.sendData(JSON.stringify(orderPayload));
-          tgApp.close();
-        } catch (err) {
-          alert("Xatolik: " + err.message);
-        }
-      } else {
-        alert("Demo Order Submitted:\n" + JSON.stringify(orderPayload, null, 2));
-      }
-    }
-
-    renderCategories();
-    renderProducts();
-    lucide.createIcons();
-  </script>
-</body>
-</html>
+        html += '<div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3 flex flex-col justify-between hover:border-slate-700/80 transition-all">';
+        html += '<div>';
+        
