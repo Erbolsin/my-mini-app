@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<html lang="uz" class="h-full bg-slate-950 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Telegram Mini App - Fast Food & Online Shop</title>
+  <title>Fast Food & Premium Delivery</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -17,12 +17,10 @@
         extend: {
           colors: {
             brand: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              500: '#0284c7',
-              600: '#0369a1',
-              700: '#075985',
-              accent: '#38bdf8'
+              50: '#fff7ed',
+              500: '#f97316', // Premium Orange Accent
+              600: '#ea580c',
+              700: '#c2410c'
             }
           }
         }
@@ -32,44 +30,71 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Custom Scrollbar for smooth horizontal scrolling */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
 <body class="h-full flex flex-col justify-between overflow-x-hidden select-none bg-slate-950 text-slate-100 font-sans antialiased">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-30 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between shadow-sm">
-    <div class="flex items-center space-x-2">
-      <div class="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 font-bold text-lg">
-        🍔
+  <!-- Sticky Header -->
+  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-500/20">
+        ⚡
       </div>
       <div>
-        <h1 class="text-base font-bold leading-tight">Fast Shop</h1>
-        <p class="text-xs text-slate-400">Tez va mazali yetkazib berish</p>
+        <h1 class="text-base font-bold leading-tight flex items-center gap-1.5">
+          FastDelivery
+          <span class="text-[10px] bg-orange-500/20 text-orange-400 font-semibold px-1.5 py-0.5 rounded-md border border-orange-500/30">PRO</span>
+        </h1>
+        <p class="text-xs text-slate-400 flex items-center gap-1">
+          <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i> 20-30 daqiqa • Bepul yetkazish*
+        </p>
       </div>
     </div>
-    <div id="cart-badge" class="hidden">
-      <button onclick="openCartModal()" class="relative p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 transition-colors">
-        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-        <span id="cart-count" class="absolute -top-1 -right-1 bg-sky-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
-      </button>
-    </div>
+
+    <!-- Cart Badge Top Right -->
+    <button onclick="openCartModal()" id="cart-badge-btn" class="relative p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/50 hover:bg-slate-800 text-orange-400 transition-all active:scale-95">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 scale-0 transition-transform duration-200">0</span>
+    </button>
   </header>
 
+  <!-- Search & Category Filter Section -->
+  <section class="p-4 pb-2 space-y-3 bg-slate-950">
+    <!-- Search Bar -->
+    <div class="relative">
+      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"></i>
+      <input type="text" id="search-input" oninput="handleSearch()" placeholder="Taom yoki ichimlik qidirish..." class="w-full bg-slate-900 border border-slate-800/80 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500/50 transition-colors">
+    </div>
+
+    <!-- Categories horizontal scroll -->
+    <div id="categories-container" class="flex space-x-2 overflow-x-auto no-scrollbar py-1">
+      <!-- Injected via JS -->
+    </div>
+  </section>
+
   <!-- Main Product Grid -->
-  <main class="flex-1 max-w-2xl w-full mx-auto p-4 pb-24">
-    <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Mahsulotlar</h2>
+  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-2 pb-28">
     <div id="products-grid" class="grid grid-cols-2 gap-3">
-      <!-- Products dynamically inserted here -->
+      <!-- Dynamic Products -->
+    </div>
+    <div id="empty-state" class="hidden text-center py-12 space-y-2">
+      <i data-lucide="search-x" class="w-10 h-10 mx-auto text-slate-600"></i>
+      <p class="text-sm font-medium text-slate-400">Afsuski, hech narsa topilmadi</p>
     </div>
   </main>
 
-  <!-- Bottom Cart Bar -->
-  <div id="bottom-cart-bar" class="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/90 backdrop-blur-lg border-t border-slate-800 transform translate-y-full transition-transform duration-300 z-40">
+  <!-- Floating Bottom Bar -->
+  <div id="bottom-cart-bar" class="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 transform translate-y-full transition-transform duration-300 z-40 shadow-2xl">
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
       <div>
-        <p class="text-xs text-slate-400">Jami summa:</p>
-        <p id="bottom-cart-total" class="text-lg font-bold text-sky-400">$0.00</p>
+        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Jami mahsulotlar</p>
+        <p id="bottom-cart-total" class="text-xl font-black text-orange-400">$0.00</p>
       </div>
-      <button onclick="openCartModal()" class="flex-1 bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center space-x-2 transition-all">
+      <button onclick="openCartModal()" class="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 transition-all">
         <span>Savatni ko'rish</span>
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </button>
@@ -77,131 +102,196 @@
   </div>
 
   <!-- Cart Modal -->
-  <div id="cart-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
-    <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-2xl max-w-lg w-full mx-auto max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+  <div id="cart-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border-t sm:border border-slate-800/80 rounded-t-3xl sm:rounded-3xl max-w-lg w-full mx-auto max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
         <h3 class="font-bold text-lg flex items-center gap-2">
-          <i data-lucide="shopping-cart" class="w-5 h-5 text-sky-400"></i>
-          Sizning savatingiz
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-orange-400"></i>
+          Sizning buyurtmangiz
         </h3>
-        <button onclick="closeCartModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeCartModal()" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
       
       <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3 divide-y divide-slate-800/50">
-        <!-- Cart items inserted here -->
+        <!-- Cart Items -->
       </div>
 
-      <div class="p-4 border-t border-slate-800 bg-slate-900/50 space-y-3">
-        <div class="flex justify-between items-center text-sm">
-          <span class="text-slate-400">Jami:</span>
-          <span id="modal-cart-total" class="text-lg font-bold text-sky-400">$0.00</span>
+      <div class="p-4 border-t border-slate-800/80 bg-slate-900/80 space-y-3">
+        <div class="space-y-1 text-xs text-slate-400">
+          <div class="flex justify-between">
+            <span>Mahsulotlar:</span>
+            <span id="modal-subtotal" class="font-semibold text-slate-200">$0.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Yetkazib berish:</span>
+            <span id="modal-delivery" class="font-semibold text-slate-200">$1.50</span>
+          </div>
+          <div class="flex justify-between text-sm font-bold text-slate-100 pt-2 border-t border-slate-800">
+            <span>Jami to'lov:</span>
+            <span id="modal-cart-total" class="text-base font-black text-orange-400">$0.00</span>
+          </div>
         </div>
-        <button onclick="openCheckoutModal()" class="w-full bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-lg shadow-sky-500/20 transition-all">
-          Buyurtmani rasmiylashtirish
+        <button onclick="openCheckoutModal()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-orange-500/25 transition-all">
+          Rasmiylashtirishga o'tish
         </button>
       </div>
     </div>
   </div>
 
   <!-- Checkout Modal -->
-  <div id="checkout-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
-    <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-2xl max-w-lg w-full mx-auto max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+  <div id="checkout-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border-t sm:border border-slate-800/80 rounded-t-3xl sm:rounded-3xl max-w-lg w-full mx-auto max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 border-b border-slate-800 flex items-center justify-between">
         <h3 class="font-bold text-lg flex items-center gap-2">
-          <i data-lucide="clipboard-check" class="w-5 h-5 text-sky-400"></i>
-          Ma'lumotlarni kiriting
+          <i data-lucide="map-pin" class="w-5 h-5 text-orange-400"></i>
+          Yetkazib berish ma'lumotlari
         </h3>
-        <button onclick="closeCheckoutModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeCheckoutModal()" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
       <form id="checkout-form" onsubmit="submitOrder(event)" class="p-4 overflow-y-auto space-y-4 text-sm">
         <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Yetkazib berish manzili</label>
-          <input type="text" id="delivery-address" required placeholder="Toshkent sh., Yunusobod t., 4-mavze" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Manzil</label>
+          <input type="text" id="delivery-address" required placeholder="Toshkent sh., Yunusobod t., 4-mavze, 12-uy" class="w-full bg-slate-800/80 border border-slate-700/70 rounded-2xl px-3.5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Telefon raqam</label>
-          <input type="tel" id="customer-phone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Telefon raqam</label>
+          <input type="tel" id="customer-phone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-800/80 border border-slate-700/70 rounded-2xl px-3.5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">To'lov turi</label>
-          <div class="grid grid-cols-2 gap-2 mt-1">
-            <label class="flex items-center space-x-2 border border-slate-700 bg-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-sky-500">
-              <input type="radio" name="payment" value="Cash" checked class="text-sky-500 focus:ring-0">
-              <span class="text-xs font-medium">Naqd pulli</span>
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">To'lov turi</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+              <input type="radio" name="payment" value="Cash" checked class="hidden">
+              <span class="text-base mb-0.5">💵</span>
+              <span class="text-xs font-semibold">Naqd</span>
             </label>
-            <label class="flex items-center space-x-2 border border-slate-700 bg-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-sky-500">
-              <input type="radio" name="payment" value="Card" class="text-sky-500 focus:ring-0">
-              <span class="text-xs font-medium">Karta orqali</span>
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+              <input type="radio" name="payment" value="Click/Payme" class="hidden">
+              <span class="text-base mb-0.5">💳</span>
+              <span class="text-xs font-semibold">Click / Payme</span>
+            </label>
+            <label class="flex flex-col items-center justify-center border border-slate-700/70 bg-slate-800/50 p-2.5 rounded-2xl cursor-pointer hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+              <input type="radio" name="payment" value="Terminal" class="hidden">
+              <span class="text-base mb-0.5">📱</span>
+              <span class="text-xs font-semibold">Terminal</span>
             </label>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Izoh (ixtiyoriy)</label>
-          <textarea id="order-note" rows="2" placeholder="Podyezd kodi, mo'ljal va h.k..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"></textarea>
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Izoh (kuryer uchun)</label>
+          <textarea id="order-note" rows="2" placeholder="Domofon kodi, qavat, mo'ljal..." class="w-full bg-slate-800/80 border border-slate-700/70 rounded-2xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"></textarea>
         </div>
 
-        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-lg shadow-sky-500/20 transition-all">
+        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-orange-500/25 transition-all">
           Buyurtmani tasdiqlash
         </button>
       </form>
     </div>
   </div>
 
-  <!-- JavaScript Logic -->
+  <!-- JS App Core -->
   <script>
+    const CATEGORIES = [
+      { id: 'all', name: 'Barchasi', icon: '🍽️' },
+      { id: 'burgers', name: 'Burgers', icon: '🍔' },
+      { id: 'pizza', name: 'Pizze', icon: '🍕' },
+      { id: 'chicken', name: 'Tovuq', icon: '🍗' },
+      { id: 'drinks', name: 'Ichimliklar', icon: '🥤' }
+    ];
+
     const PRODUCTS = [
-      { id: 1, title: 'Cheeseburger Combo', price: 6.50, emoji: '🍔', desc: 'Juicy beef, melted cheddar & fries' },
-      { id: 2, title: 'Pepperoni Pizza', price: 12.00, emoji: '🍕', desc: 'Crispy crust with double pepperoni' },
-      { id: 3, title: 'Crispy Chicken Wings', price: 7.99, emoji: '🍗', desc: '6 pcs spicy wings with dip' },
-      { id: 4, title: 'Classic Club Sandwich', price: 5.50, emoji: '🥪', desc: 'Triple decker with turkey & bacon' },
-      { id: 5, title: 'French Fries XXL', price: 3.00, emoji: '🍟', desc: 'Golden salty crunchy fries' },
-      { id: 6, title: 'Cold Coca-Cola 0.5L', price: 1.50, emoji: '🥤', desc: 'Refreshing original taste' }
+      { id: 1, category: 'burgers', title: 'Double Black Cheeseburger', price: 7.50, emoji: '🍔', desc: 'Ikkita suvli kotlet, cheddar pishlog\'i, maxsus sous' },
+      { id: 2, category: 'burgers', title: 'Classic Beef Burger', price: 5.50, emoji: '🍔', desc: 'Klassik mol go\'shti va barra sabzavotlar' },
+      { id: 3, category: 'pizza', title: 'Pepperoni Supreme', price: 11.90, emoji: '🍕', desc: 'Mo'l pepperoni va cho'ziluvchan mosarella' },
+      { id: 4, category: 'pizza', title: 'Four Cheese Special', price: 10.50, emoji: '🧀', desc: '4 xil premium pishloq uyg'unligi' },
+      { id: 5, category: 'chicken', title: 'Crispy Wings (8 dona)', price: 8.00, emoji: '🍗', desc: 'Qarsillama va achchiq tovuq qanotchalari' },
+      { id: 6, category: 'chicken', title: 'Nuggets & French Fries', price: 6.00, emoji: '🍟', desc: 'Nuggetslar kartoshka fri bilan' },
+      { id: 7, category: 'drinks', title: 'Coca-Cola Zero 0.5L', price: 1.50, emoji: '🥤', desc: 'Muzdek tetiklashtiruvchi ichimlik' },
+      { id: 8, category: 'drinks', title: 'Fresh Orange Juice', price: 3.00, emoji: '🧃', desc: 'Tabiiy yangi siqilgan apelsin sharbati' }
     ];
 
     let cart = {};
+    let selectedCategory = 'all';
+    let searchQuery = '';
 
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
+      if (tg.setHeaderColor) tg.setHeaderColor('#0f172a');
     }
 
     function triggerHaptic(style = 'light') {
-      if (tg && tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred(style);
-      }
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(style);
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categories-container');
+      container.innerHTML = CATEGORIES.map(c => `
+        <button onclick="setCategory('${c.id}')" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${selectedCategory === c.id ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}">
+          <span>${c.icon}</span>
+          <span>${c.name}</span>
+        </button>
+      `).join('');
+    }
+
+    function setCategory(id) {
+      triggerHaptic('light');
+      selectedCategory = id;
+      renderCategories();
+      renderProducts();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+      renderProducts();
     }
 
     function renderProducts() {
       const container = document.getElementById('products-grid');
-      container.innerHTML = PRODUCTS.map(p => {
+      const emptyState = document.getElementById('empty-state');
+
+      const filtered = PRODUCTS.filter(p => {
+        const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+        const matchesSearch = p.title.toLowerCase().includes(searchQuery) || p.desc.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      container.innerHTML = filtered.map(p => {
         const qty = cart[p.id] || 0;
         return `
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col justify-between hover:border-slate-700 transition-all">
+          <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3 flex flex-col justify-between hover:border-slate-700/80 transition-all">
             <div>
-              <div class="text-4xl text-center py-3 bg-slate-950/50 rounded-xl mb-2">${p.emoji}</div>
-              <h3 class="font-bold text-sm line-clamp-1">${p.title}</h3>
-              <p class="text-[11px] text-slate-400 line-clamp-2 mt-0.5">${p.desc}</p>
+              <div class="text-4xl text-center py-3 bg-slate-950/60 rounded-xl mb-2.5 select-none">${p.emoji}</div>
+              <h3 class="font-bold text-sm leading-tight text-slate-100 line-clamp-1">${p.title}</h3>
+              <p class="text-[11px] text-slate-400 line-clamp-2 mt-1 leading-relaxed">${p.desc}</p>
             </div>
-            <div class="mt-3 flex items-center justify-between">
-              <span class="font-bold text-sky-400 text-sm">$${p.price.toFixed(2)}</span>
+            <div class="mt-3.5 flex items-center justify-between pt-2 border-t border-slate-800/50">
+              <span class="font-black text-orange-400 text-sm">$${p.price.toFixed(2)}</span>
               ${qty > 0 ? `
-                <div class="flex items-center space-x-2 bg-slate-800 rounded-lg p-1">
-                  <button onclick="updateQty(${p.id}, -1)" class="w-6 h-6 rounded-md bg-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-600">-</button>
-                  <span class="text-xs font-bold w-4 text-center">${qty}</span>
-                  <button onclick="updateQty(${p.id}, 1)" class="w-6 h-6 rounded-md bg-sky-500 text-white flex items-center justify-center font-bold text-xs hover:bg-sky-400">+</button>
+                <div class="flex items-center space-x-1.5 bg-slate-800 rounded-xl p-1 border border-slate-700/50">
+                  <button onclick="updateQty(${p.id}, -1)" class="w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-600 text-slate-200 active:scale-90 transition-transform">-</button>
+                  <span class="text-xs font-black w-4 text-center text-orange-400">${qty}</span>
+                  <button onclick="updateQty(${p.id}, 1)" class="w-6 h-6 rounded-lg bg-orange-500 text-white flex items-center justify-center font-bold text-xs hover:bg-orange-400 active:scale-90 transition-transform">+</button>
                 </div>
               ` : `
-                <button onclick="updateQty(${p.id}, 1)" class="bg-sky-500 hover:bg-sky-400 text-white px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors">
-                  <span>Qo'shish</span>
+                <button onclick="updateQty(${p.id}, 1)" class="bg-orange-500/10 hover:bg-orange-500 text-orange-400 hover:text-white border border-orange-500/30 px-3 py-1.5 rounded-xl font-bold text-xs transition-all active:scale-95">
+                  + Qo'shish
                 </button>
               `}
             </div>
@@ -219,41 +309,43 @@
     }
 
     function getCartMetrics() {
+      let subtotal = 0;
       let totalCount = 0;
-      let totalPrice = 0;
       Object.keys(cart).forEach(id => {
-        const product = PRODUCTS.find(p => p.id === parseInt(id));
-        if (product) {
+        const p = PRODUCTS.find(prod => prod.id === parseInt(id));
+        if (p) {
+          subtotal += p.price * cart[id];
           totalCount += cart[id];
-          totalPrice += product.price * cart[id];
         }
       });
-      return { totalCount, totalPrice };
+      const delivery = subtotal >= 15 || subtotal === 0 ? 0 : 1.50;
+      return { subtotal, delivery, totalPrice: subtotal + delivery, totalCount };
     }
 
     function updateCartUI() {
-      const { totalCount, totalPrice } = getCartMetrics();
-      const badge = document.getElementById('cart-badge');
+      const { subtotal, delivery, totalPrice, totalCount } = getCartMetrics();
+      const badgeBtn = document.getElementById('cart-badge-btn');
       const countEl = document.getElementById('cart-count');
       const bottomBar = document.getElementById('bottom-cart-bar');
-      const bottomTotal = document.getElementById('bottom-cart-total');
-      const modalTotal = document.getElementById('modal-cart-total');
 
       countEl.innerText = totalCount;
-      bottomTotal.innerText = `$${totalPrice.toFixed(2)}`;
-      modalTotal.innerText = `$${totalPrice.toFixed(2)}`;
+      document.getElementById('bottom-cart-total').innerText = `$${totalPrice.toFixed(2)}`;
+      document.getElementById('modal-subtotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('modal-delivery').innerText = delivery === 0 ? 'Bepul' : `$${delivery.toFixed(2)}`;
+      document.getElementById('modal-cart-total').innerText = `$${totalPrice.toFixed(2)}`;
 
       if (totalCount > 0) {
-        badge.classList.remove('hidden');
+        countEl.classList.remove('scale-0');
         bottomBar.classList.remove('translate-y-full');
       } else {
-        badge.classList.add('hidden');
+        countEl.classList.add('scale-0');
         bottomBar.classList.add('translate-y-full');
         closeCartModal();
       }
     }
 
     function openCartModal() {
+      if (getCartMetrics().totalCount === 0) return;
       triggerHaptic('medium');
       renderCartItems();
       document.getElementById('cart-modal').classList.remove('hidden');
@@ -275,38 +367,31 @@
 
     function renderCartItems() {
       const container = document.getElementById('cart-items');
-      const items = Object.keys(cart).map(id => {
-        const product = PRODUCTS.find(p => p.id === parseInt(id));
-        return { ...product, qty: cart[id] };
-      });
-
-      if (items.length === 0) {
-        container.innerHTML = `<p class="text-center text-slate-500 py-8 text-sm">Savat bo'sh</p>`;
-        return;
-      }
+      const items = Object.keys(cart).map(id => ({
+        ...PRODUCTS.find(p => p.id === parseInt(id)),
+        qty: cart[id]
+      }));
 
       container.innerHTML = items.map(item => `
         <div class="flex items-center justify-between pt-3">
           <div class="flex items-center space-x-3">
             <span class="text-2xl">${item.emoji}</span>
             <div>
-              <p class="font-semibold text-sm">${item.title}</p>
-              <p class="text-xs text-slate-400">$${item.price.toFixed(2)} x ${item.qty}</p>
+              <p class="font-bold text-sm text-slate-100">${item.title}</p>
+              <p class="text-xs text-slate-400">$${item.price.toFixed(2)} × ${item.qty}</p>
             </div>
           </div>
-          <div class="flex items-center space-x-2 bg-slate-800 rounded-lg p-1">
-            <button onclick="updateQty(${item.id}, -1); renderCartItems();" class="w-6 h-6 rounded bg-slate-700 font-bold text-xs">-</button>
-            <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
-            <button onclick="updateQty(${item.id}, 1); renderCartItems();" class="w-6 h-6 rounded bg-sky-500 text-white font-bold text-xs">+</button>
+          <div class="flex items-center space-x-1.5 bg-slate-800 rounded-xl p-1 border border-slate-700/50">
+            <button onclick="updateQty(${item.id}, -1); renderCartItems();" class="w-6 h-6 rounded-lg bg-slate-700 font-bold text-xs">-</button>
+            <span class="text-xs font-black w-4 text-center text-orange-400">${item.qty}</span>
+            <button onclick="updateQty(${item.id}, 1); renderCartItems();" class="w-6 h-6 rounded-lg bg-orange-500 text-white font-bold text-xs">+</button>
           </div>
         </div>
       `).join('');
     }
 
-    // AYNAN SHU FUNKSIYA QOTISHNI (FREEZE) YO'QOTADI
     function submitOrder(event) {
       if (event) event.preventDefault();
-
       triggerHaptic('heavy');
 
       const address = document.getElementById('delivery-address')?.value || 'Ko\'rsatilmadi';
@@ -314,43 +399,42 @@
       const payment = document.querySelector('input[name="payment"]:checked')?.value || 'Cash';
       const note = document.getElementById('order-note')?.value || '';
 
-      const { totalPrice } = getCartMetrics();
+      const { subtotal, delivery, totalPrice } = getCartMetrics();
 
       const orderPayload = {
         items: Object.keys(cart).map(id => {
-          const product = PRODUCTS.find(p => p.id === parseInt(id));
+          const p = PRODUCTS.find(prod => prod.id === parseInt(id));
           return {
             id: id,
-            title: product ? product.title : 'Mahsulot',
+            title: p ? p.title : 'Mahsulot',
             quantity: cart[id],
-            price: product ? product.price : 0
+            price: p ? p.price : 0
           };
         }),
         address: address,
         phone: phone,
         paymentMethod: payment,
         note: note,
+        subtotal: subtotal,
+        deliveryFee: delivery,
         totalPrice: totalPrice
       };
 
-      if (window.Telegram && window.Telegram.WebApp) {
+      if (window.Telegram?.WebApp) {
         const tgApp = window.Telegram.WebApp;
         tgApp.ready();
-
         try {
-          // Ma'lumotni Telegram botga yuborish
           tgApp.sendData(JSON.stringify(orderPayload));
-          
-          // Telegram Mini App oynasini avtomashina yopish (Freeze-ning oldini oladi)
           tgApp.close();
         } catch (err) {
           alert("Xatolik: " + err.message);
         }
       } else {
-        alert("Buyurtma yuborildi (Brauzer testi):\n" + JSON.stringify(orderPayload, null, 2));
+        alert("Demo Order Submitted:\n" + JSON.stringify(orderPayload, null, 2));
       }
     }
 
+    renderCategories();
     renderProducts();
     lucide.createIcons();
   </script>
